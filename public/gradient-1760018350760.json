@@ -1,0 +1,17 @@
+{
+  "colors": [
+    "#0185b6",
+    "#00d49c"
+  ],
+  "type": "linear",
+  "angle": 75,
+  "radialPosition": {
+    "x": 0,
+    "y": 35
+  },
+  "conicAngle": 0,
+  "smooth": true,
+  "isAnimated": false,
+  "animationSpeed": 3,
+  "timestamp": "2025-10-09T13:59:10.751Z"
+}

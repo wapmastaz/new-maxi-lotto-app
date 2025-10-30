@@ -1,0 +1,136 @@
+import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatCurrency, fullDateFormat } from "@/lib/utils";
+import type { GameTicket } from "@/types/game";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "../ui/base-badge";
+
+export const columns: ColumnDef<GameTicket>[] = [
+
+  {
+    accessorKey: 'ID',
+    id: 'id',
+    cell: ({ row }) => (
+      <div>{row.original.id}</div>
+    ),
+    enableSorting: true,
+    enableResizing: true,
+    meta: {
+      skeleton: <Skeleton className="w-28 h-7" />
+    }
+  },
+  {
+    accessorKey: 'Date',
+    id: 'dateRegistered',
+    header: ({ column }) => <DataGridColumnHeader title="Date" visibility={true} column={column} />,
+    cell: ({ row }) => {
+      return (
+        <div>{fullDateFormat(row.original.dateRegistered)}</div>
+      );
+    },
+    enableSorting: true,
+    enableResizing: true,
+    meta: {
+      skeleton: <Skeleton className="w-28 h-7" />
+    }
+  },
+  {
+    accessorKey: 'Game',
+    id: 'game',
+    cell: ({ row }) => {
+      return (
+        <div>{row.original.game.name}</div>
+      );
+    },
+    size: 100,
+    enableSorting: true,
+    enableHiding: false,
+    enableResizing: true,
+    meta: {
+      skeleton: <Skeleton className="w-28 h-7" />
+    }
+  },
+  {
+    accessorKey: 'Amount',
+    id: 'amount',
+    header: ({ column }) => <DataGridColumnHeader title="Amount" visibility={true} column={column} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-1.5">
+          {formatCurrency(row.original.amount)}
+        </div>
+      );
+    },
+
+    meta: {
+      headerClassName: '',
+      cellClassName: 'text-start',
+      skeleton: <Skeleton className="w-28 h-7" />
+    },
+    enableSorting: true,
+    enableHiding: true,
+    enableResizing: true,
+  },
+  {
+    accessorKey: 'Won Amount',
+    id: 'wonAmount',
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-1.5">
+          {formatCurrency(row.original.wonAmount)}
+        </div>
+      );
+    },
+    meta: {
+      headerClassName: '',
+      cellClassName: 'text-start',
+      skeleton: <Skeleton className="w-28 h-7" />
+    },
+    enableSorting: true,
+    enableHiding: true,
+    enableResizing: true,
+  },
+
+  {
+    accessorKey: 'status',
+    id: 'status',
+    header: ({ column }) => <DataGridColumnHeader title="Status" visibility={true} column={column} />,
+    cell: ({ row }) => {
+      const status = row.original.status.name;
+
+      if (status == 'Active') {
+        return (
+          <Badge variant="primary" appearance="outline">
+            Approved
+          </Badge>
+        );
+      } else if (status == 'Undecided') {
+        return (
+          <Badge variant="warning" appearance="outline">
+            Undecided
+          </Badge>
+        );
+      } else if (status == 'Inactive') {
+        return (
+          <Badge variant="secondary" appearance="outline">
+            Inactive
+          </Badge>
+        );
+      } else {
+        return (
+          <Badge variant="secondary" appearance="outline">
+            Pending
+          </Badge>
+        );
+      }
+    },
+    size: 100,
+    enableSorting: true,
+    enableHiding: true,
+    enableResizing: true,
+    meta: {
+      skeleton: <Skeleton className="w-28 h-7" />
+    }
+  }
+];
+
