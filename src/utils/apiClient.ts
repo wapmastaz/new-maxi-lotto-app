@@ -45,7 +45,7 @@ apiClient.interceptors.response.use(
 		) {
 			console.log('🔒 Session expired. Logging out.');
 			useAuthStore.getState().clearToken();
-			window.location.href = '/';
+			//window.location.href = '/';
 		}
 
 		return Promise.reject(error);

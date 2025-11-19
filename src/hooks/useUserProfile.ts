@@ -4,7 +4,7 @@ import {
 	fetchFavouriteBalls,
 	fetchUserProfile,
 } from '@/services/UserService';
-import type { Bank, User } from '@/types/user';
+import type { Bank, User, MinimalUser } from '@/types/user';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 export const useUserProfile = () => {
@@ -31,9 +31,10 @@ export const useFetchDebitCards = () => {
 	});
 };
 
-export const useFetchFavouriteBalls = () => {
-	return useSuspenseQuery<number[], Error>({
+export const useFetchFavouriteBalls = (user?: MinimalUser | null) => {
+	return useQuery<number[], Error>({
 		queryKey: ['favourite_balls'],
 		queryFn: () => fetchFavouriteBalls(),
+		enabled: !!user,
 	});
 };

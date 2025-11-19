@@ -56,7 +56,7 @@ function RouteComponent() {
   const { data: betTypes } = useGetBetTypes()
   const { minimalUser: user, syncUser } = useAuthStore(state => state)
   const { data: games } = useFetchDailyGames()
-  const { data: favoriteBalls } = useFetchFavouriteBalls();
+  const {data: favoriteBalls} = useFetchFavouriteBalls(user);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -529,6 +529,31 @@ function RouteComponent() {
 
             {/* existing: {selectedBalls.length > 0 && ( ... )} */}
 
+            {/* ball grid */}
+            <div className="flex flex-wrap gap-4 rounded-2xl p-2">
+              {Array.from({ length: 90 }, (_, i) => i + 1).map((num) => {
+                // ✨ DETERMINE BALL STATE
+                const isBanker = bankerBalls.includes(num);
+                const isAgainst = againstBalls.includes(num);
+                const isNormalSelected = selectedBalls.includes(num);
+
+                return (
+                  <Ball
+                    key={num}
+                    value={num}
+                    // A ball is "selected" if it's in any of the three lists
+                    isSelected={isBanker || isAgainst || isNormalSelected}
+                    // Apply different styling based on its role
+                    className={
+                      isBanker ? 'bg-[#FFF100] text-[#0A4B7F] border-2 border-red-500' :
+                        isAgainst ? 'bg-gray-400 text-white' : ''
+                    }
+                    onClick={() => selectBall(num)}
+                  />
+                );
+              })}
+            </div>
+
             {/* CONDITIONAL DISPLAY OF SELECTED NUMBERS - MODIFIED */}
             <div className="flex flex-col items-center w-full mt-6">
               <span className="text-white mb-2">
@@ -598,32 +623,6 @@ function RouteComponent() {
                   <p className="text-center text-gray-500 w-full">No numbers selected.</p>
                 )}
               </div>
-            </div>
-
-            {/* ball grid */}
-            {/* ball grid */}
-            <div className="flex flex-wrap gap-4 rounded-2xl p-2">
-              {Array.from({ length: 90 }, (_, i) => i + 1).map((num) => {
-                // ✨ DETERMINE BALL STATE
-                const isBanker = bankerBalls.includes(num);
-                const isAgainst = againstBalls.includes(num);
-                const isNormalSelected = selectedBalls.includes(num);
-
-                return (
-                  <Ball
-                    key={num}
-                    value={num}
-                    // A ball is "selected" if it's in any of the three lists
-                    isSelected={isBanker || isAgainst || isNormalSelected}
-                    // Apply different styling based on its role
-                    className={
-                      isBanker ? 'bg-[#FFF100] text-[#0A4B7F] border-2 border-red-500' :
-                        isAgainst ? 'bg-gray-400 text-white' : ''
-                    }
-                    onClick={() => selectBall(num)}
-                  />
-                );
-              })}
             </div>
 
             {/* selected balls */}

@@ -27,6 +27,7 @@ import { Route as LayoutGamesRouteImport } from './routes/_layout/games'
 import { Route as LayoutFaqRouteImport } from './routes/_layout/faq'
 import { Route as LayoutContactRouteImport } from './routes/_layout/contact'
 import { Route as LayoutAboutRouteImport } from './routes/_layout/about'
+import { Route as AuthenticatedWithdrawalRouteImport } from './routes/_authenticated/withdrawal'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
@@ -129,6 +130,11 @@ const LayoutAboutRoute = LayoutAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => LayoutRoute,
 } as any)
+const AuthenticatedWithdrawalRoute = AuthenticatedWithdrawalRouteImport.update({
+  id: '/withdrawal',
+  path: '/withdrawal',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof AuthenticatedTicketsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/withdrawal': typeof AuthenticatedWithdrawalRoute
   '/about': typeof LayoutAboutRoute
   '/contact': typeof LayoutContactRoute
   '/faq': typeof LayoutFaqRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof AuthenticatedTicketsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/withdrawal': typeof AuthenticatedWithdrawalRoute
   '/about': typeof LayoutAboutRoute
   '/contact': typeof LayoutContactRoute
   '/faq': typeof LayoutFaqRoute
@@ -270,6 +278,7 @@ export interface FileRoutesById {
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
+  '/_authenticated/withdrawal': typeof AuthenticatedWithdrawalRoute
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/contact': typeof LayoutContactRoute
   '/_layout/faq': typeof LayoutFaqRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/transactions'
     | '/wallet'
+    | '/withdrawal'
     | '/about'
     | '/contact'
     | '/faq'
@@ -332,6 +342,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/transactions'
     | '/wallet'
+    | '/withdrawal'
     | '/about'
     | '/contact'
     | '/faq'
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tickets'
     | '/_authenticated/transactions'
     | '/_authenticated/wallet'
+    | '/_authenticated/withdrawal'
     | '/_layout/about'
     | '/_layout/contact'
     | '/_layout/faq'
@@ -520,6 +532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAboutRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_authenticated/withdrawal': {
+      id: '/_authenticated/withdrawal'
+      path: '/withdrawal'
+      fullPath: '/withdrawal'
+      preLoaderRoute: typeof AuthenticatedWithdrawalRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/wallet': {
       id: '/_authenticated/wallet'
       path: '/wallet'
@@ -615,6 +634,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
+  AuthenticatedWithdrawalRoute: typeof AuthenticatedWithdrawalRoute
   AuthenticatedSettingsBankRoute: typeof AuthenticatedSettingsBankRoute
   AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
   AuthenticatedSettingsEmailRoute: typeof AuthenticatedSettingsEmailRoute
@@ -630,6 +650,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
+  AuthenticatedWithdrawalRoute: AuthenticatedWithdrawalRoute,
   AuthenticatedSettingsBankRoute: AuthenticatedSettingsBankRoute,
   AuthenticatedSettingsChangePasswordRoute:
     AuthenticatedSettingsChangePasswordRoute,

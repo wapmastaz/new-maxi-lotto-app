@@ -9,16 +9,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { formatCurrency } from "@/lib/utils"
-import type { DepositResponse } from "@/types/api"
-import { useState } from "react"
-import { toast } from "sonner"
+import {Button} from "@/components/ui/button"
+import {Separator} from "@/components/ui/separator"
+import {formatCurrency} from "@/lib/utils"
+import type {DepositResponse} from "@/types/api"
+import {useState} from "react"
+import {toast} from "sonner"
 import PaystackPop from "@paystack/inline-js"
-import { Spinner } from "@/components/ui/spinner"
-import type { User } from "@/types/user"
-import { useQueryClient } from "@tanstack/react-query"
+import {Spinner} from "@/components/ui/spinner"
+import type {User} from "@/types/user"
+import {useQueryClient} from "@tanstack/react-query"
+import {redirect} from "@tanstack/react-router";
 
 interface ConfirmationModalProps {
   open: boolean,
@@ -28,7 +29,7 @@ interface ConfirmationModalProps {
   handleFormReset: () => void
 }
 
-export function ConfirmationModal({ open, setOpen, data, user, handleFormReset }: ConfirmationModalProps) {
+export function ConfirmationModal({open, setOpen, data, user, handleFormReset}: ConfirmationModalProps) {
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -47,15 +48,15 @@ export function ConfirmationModal({ open, setOpen, data, user, handleFormReset }
         key: "pk_test_ca2dd4df87ee7d55fafcf8670fdc1479db22ac3d",
         email: user.email,
         amount: data.amount * 100, // Paystack expects amount in kobo
+        ref: data.transactionRefrence,
         callback: (response) => {
           console.log('Payment successful', response);
           toast.success(`Payment complete! Ref: ${response.reference}`);
           setOpen(false); // Close modal on success
-          queryClient.invalidateQueries({ queryKey: ['userProfile'] })
+          queryClient.invalidateQueries({queryKey: ['userProfile']})
           // 🎯 IMPORTANT: Call your backend here to verify payment:
-          // verifyPayment(response.reference); 
           handleFormReset()
-          // redirect();
+          redirect({to: `/deposits/verify/${response.reference}`});
         },
         onClose: () => {
           toast.warning('Transaction was not completed, window closed.');
@@ -63,7 +64,7 @@ export function ConfirmationModal({ open, setOpen, data, user, handleFormReset }
         },
       });
     } catch (error: any) {
-      console.error("Paystack Initiation Error:", error)
+      //console.error("Paystack Initiation Error:", error)
       toast.error(error.message || "Failed to initiate payment gateway.")
     } finally {
       // Paystack pop handles the loading state itself, but we keep this for initial setup delay
@@ -90,12 +91,12 @@ export function ConfirmationModal({ open, setOpen, data, user, handleFormReset }
             <p className="">Amount to pay:</p>
             <span className="font-bold text-lg text-primary-900">{formatCurrency(data.amount)}</span>
           </div>
-          <Separator />
+          <Separator/>
           <div className="flex items-center justify-between gap-2">
             <p className="">Payment Method:</p>
             <span className="font-medium">{data.providerName}</span>
           </div>
-          <Separator />
+          <Separator/>
           <div className="flex items-center justify-between gap-2">
             <p className="">Reference:</p>
             <span className="font-medium text-gray-600">{data.transactionRefrence}</span>
@@ -119,7 +120,7 @@ export function ConfirmationModal({ open, setOpen, data, user, handleFormReset }
               onClick={depositFunds}
               className="w-full bg-primary-900 text-white flex items-center gap-2 rounded px-6 py-5 uppercase"
             >
-              {isLoading && <Spinner />}
+              {isLoading && <Spinner/>}
               {isLoading ? "Loading Gateway..." : "Proceed to Pay"}
             </Button>
           </AlertDialogAction>

@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Image } from "@unpic/react";
+import NewsLetter from "@/components/NewsLetter.tsx";
 
 const Footer = () => {
   return (
@@ -57,7 +58,7 @@ const Footer = () => {
                   Subscribe now and receive weekly newsletter for latest draw and offer news and much more!
                 </li>
                 <li className="mb-0">
-                  {/* <NewsLetter /> */}
+                   <NewsLetter />
                 </li>
               </ul>
             </div>
