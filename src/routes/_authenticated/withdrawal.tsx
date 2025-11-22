@@ -61,9 +61,8 @@ function RouteComponent() {
     setOpen(true);
     try {
       setIsLoading(true);
-      console.log("✅ Sending withdrawal to backend:", pendingValues);
       // send withdrawal to backend
-      await requestWithdrawal(Number(pendingValues.amount), user.customerId);
+      await requestWithdrawal(Number(pendingValues.amount), user?.customerId);
       toast.success("Withdrawal request submitted successfully!");
       setOpen(false); // ✅ Close manually after success
       form.reset();   // optional

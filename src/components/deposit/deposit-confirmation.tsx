@@ -19,6 +19,7 @@ import PaystackPop from "@paystack/inline-js"
 import {Spinner} from "@/components/ui/spinner"
 import type {User} from "@/types/user"
 import {useQueryClient} from "@tanstack/react-query"
+import {useNavigate} from "@tanstack/react-router";
 // import {redirect} from "@tanstack/react-router";
 
 interface ConfirmationModalProps {
@@ -34,6 +35,8 @@ export function ConfirmationModal({open, setOpen, data, user, handleFormReset}: 
   const [isLoading, setIsLoading] = useState(false)
 
   const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
 
   const depositFunds = async () => {
 
@@ -56,7 +59,12 @@ export function ConfirmationModal({open, setOpen, data, user, handleFormReset}: 
           queryClient.invalidateQueries({queryKey: ['userProfile']})
           // 🎯 IMPORTANT: Call your backend here to verify payment:
           handleFormReset()
-          //redirect({to: `/deposits/verify/${response.reference}`});
+          navigate({
+            to: "/deposit/verify/$depositId",
+            params: {
+              depositId: response.reference
+            }
+          })
         },
         onClose: () => {
           toast.warning('Transaction was not completed, window closed.');

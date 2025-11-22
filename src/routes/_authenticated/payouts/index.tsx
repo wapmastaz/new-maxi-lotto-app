@@ -1,7 +1,7 @@
-import { PayoutsHistory } from '@/components/payouts/payouts-history'
 import { createFileRoute } from '@tanstack/react-router'
+import {PayoutsHistory} from "@/components/payouts/payouts-history.tsx";
 
-export const Route = createFileRoute('/_authenticated/payouts')({
+export const Route = createFileRoute('/_authenticated/payouts/')({
   component: RouteComponent,
 })
 

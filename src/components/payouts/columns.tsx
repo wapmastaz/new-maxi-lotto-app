@@ -121,7 +121,7 @@ export const columns: ColumnDef<CustomerPayout>[] = [
       return (
         <div>
           <Button variant="outline" asChild size="sm" className="text-muted-foreground items-center text-sm">
-            <Link to={`/payouts/${row.original.id}`} className="flex items-center gap-1">
+            <Link to="/payouts/$payoutId" params={{payoutId: String(row.original.id)}} className="flex items-center gap-1">
               <Eye /> view
             </Link>
           </Button>

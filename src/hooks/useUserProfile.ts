@@ -5,10 +5,10 @@ import {
 	fetchUserProfile,
 } from '@/services/UserService';
 import type { Bank, User, MinimalUser } from '@/types/user';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export const useUserProfile = () => {
-	return useSuspenseQuery<User, Error>({
+	return useQuery<User, Error>({
 		queryKey: ['userProfile'],
 		queryFn: fetchUserProfile,
 		select: (data) => {

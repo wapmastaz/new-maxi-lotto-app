@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { DepositResponse } from '@/types/api';
-import type { User } from '@/types/user';
 import apiClient from '@/utils/apiClient';
 
+interface verifyResponseProps {
+	statusCode: boolean;
+	reference: string;
+}
 export const depositFunds = async (
 	customerId: number,
 	amount: number,
@@ -33,9 +36,9 @@ export const depositFunds = async (
 
 // verify Deposit
 // /api/Payments/paystack/verify/{reference}
-export const verifyDeposit = async (reference: string): Promise<any> => {
+export const verifyDeposit = async (reference: string): Promise<verifyResponseProps> => {
 	try {
-		const response = await apiClient.post<User>(
+		const response = await apiClient.post<verifyResponseProps>(
 			'Payments/paystack/verify/' + reference
 		);
 		return response.data;

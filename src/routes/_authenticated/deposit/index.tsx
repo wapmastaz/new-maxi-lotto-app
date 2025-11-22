@@ -1,13 +1,12 @@
-import { DepositForm } from '@/components/deposit/deposit-form'
-import { useUserProfile } from '@/hooks/useUserProfile'
 import { createFileRoute } from '@tanstack/react-router'
+import {useUserProfile} from "@/hooks/useUserProfile.ts";
+import {DepositForm} from "@/components/deposit/deposit-form.tsx";
 
-export const Route = createFileRoute('/_authenticated/deposit')({
+export const Route = createFileRoute('/_authenticated/deposit/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-
   const { data: user } = useUserProfile()
 
   return (
@@ -18,7 +17,7 @@ function RouteComponent() {
 
       <section className="py-8 sm:py-12">
         <div className="container mx-auto px-4">
-          <DepositForm user={user} />
+          {user && <DepositForm user={user} />}
         </div>
       </section>
     </>

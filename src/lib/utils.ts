@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import moment from 'moment';
+import * as moment from 'moment'
 import { gradients } from '@/constants';
 /**
  * Merges Tailwind class names, resolving any conflicts.

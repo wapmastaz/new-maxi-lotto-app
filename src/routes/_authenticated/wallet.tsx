@@ -65,7 +65,7 @@ function RouteComponent() {
               </Link>
             </Button>
             <Button size={"lg"} className="w-32 bg-[#0185B6] rounded-3xl text-white hover:bg-[#0185B6]/90" asChild>
-              <Link href="/withdrawal">
+              <Link to="/withdrawal">
                 Withdraw
               </Link>
             </Button>

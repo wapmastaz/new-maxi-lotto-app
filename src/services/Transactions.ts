@@ -67,7 +67,7 @@ export const fetchUserTransactions = async (pagination: {
 // Request Withdrawal
 export const requestWithdrawal = async (
 	amount: number,
-	customer: number,
+	customer?: number,
 	details?: string
 ): Promise<any> => {
 	try {

@@ -17,11 +17,11 @@ import { cn } from "@/lib/utils"
 interface FavouriteBallDialogProps {
   open: boolean
   setOpen: (open: boolean) => void
-  user: User
+  currentUser: User
   favouriteBalls: number[]
 }
 
-export function FavouriteBallDialog({ open, setOpen, favouriteBalls, user }: FavouriteBallDialogProps) {
+export function FavouriteBallDialog({ open, setOpen, favouriteBalls, currentUser }: FavouriteBallDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedBalls, setSelectedBalls] = useState<number[]>(favouriteBalls || [])
 
@@ -41,10 +41,10 @@ export function FavouriteBallDialog({ open, setOpen, favouriteBalls, user }: Fav
         return
       }
       setIsLoading(true)
-      await updateFavouriteBall(user.customerId, selectedBalls)
+      await updateFavouriteBall(currentUser.customerId, selectedBalls)
       // 🔹 Replace this with your API call
       // console.log("Selected Favourite Balls:", selectedBalls)
-      queryClient.invalidateQueries({ queryKey: ['favourite_balls'] })
+      await queryClient.invalidateQueries({queryKey: ['favourite_balls']})
 
       toast.success("Favourite balls updated successfully!")
       setOpen(false)

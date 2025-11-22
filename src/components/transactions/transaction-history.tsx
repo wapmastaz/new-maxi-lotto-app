@@ -53,7 +53,7 @@ export const TransactionsHistory = () => {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'name', desc: true }]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [columnOrder, setColumnOrder] = useState<string[]>(columns.map((column) => column.id as string));
+  const [, setColumnOrder] = useState<string[]>(columns.map((column) => column.id as string));
 
   const table = useReactTable({
     columns,

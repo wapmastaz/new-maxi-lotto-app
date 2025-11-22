@@ -54,8 +54,7 @@ function RouteComponent() {
           <div className="flex justify-center items-center mt-8">
             <Button variant={"primary"} className="px-6 w-full uppercase bg-primary-900 text-white flex items-center gap-2 rounded" onClick={() => setOpen(true)}>Add Favourite Balls</Button>
           </div>
-
-          {favouriteBalls && <FavouriteBallDialog open={open} user={user} favouriteBalls={favouriteBalls} setOpen={setOpen} />}
+          {favouriteBalls && user && <FavouriteBallDialog open={open} currentUser={user} favouriteBalls={favouriteBalls} setOpen={setOpen} />}
         </div>
       </section>
     </>

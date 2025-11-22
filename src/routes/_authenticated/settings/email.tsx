@@ -57,7 +57,7 @@ function RouteComponent() {
           <div className="w-full sm:max-w-md px-4 py-6 space-y-6 bg-background rounded-lg shadow-2xl">
             <p className="text-muted-foreground text-center">
               Please verify your email address to continue using our services. We
-              will send a verification code to your email address. ({maskEmail(user.email)})
+              will send a verification code to your email address. ({user && maskEmail(user.email)})
             </p>
 
             {/* request code button */}

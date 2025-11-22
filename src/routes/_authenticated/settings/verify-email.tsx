@@ -23,7 +23,7 @@ function RouteComponent() {
         <div className="container mx-auto px-4">
           <div className="w-full sm:max-w-md px-4 py-6 space-y-6 bg-background rounded-lg shadow-2xl">
             <p className="text-muted-foreground text-center">
-              Enter the verification code sent to ({maskEmail(user.email)})
+              Enter the verification code sent to ({user && maskEmail(user.email)})
             </p>
 
             <EmailVerificationForm />

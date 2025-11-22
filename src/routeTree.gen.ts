@@ -32,14 +32,16 @@ import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedPayoutsRouteImport } from './routes/_authenticated/payouts'
 import { Route as AuthenticatedFavouriteBallsRouteImport } from './routes/_authenticated/favourite-balls'
-import { Route as AuthenticatedDepositRouteImport } from './routes/_authenticated/deposit'
+import { Route as AuthenticatedPayoutsIndexRouteImport } from './routes/_authenticated/payouts/index'
+import { Route as AuthenticatedDepositIndexRouteImport } from './routes/_authenticated/deposit/index'
 import { Route as AuthenticatedSettingsVerifyEmailRouteImport } from './routes/_authenticated/settings/verify-email'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings/profile'
 import { Route as AuthenticatedSettingsEmailRouteImport } from './routes/_authenticated/settings/email'
 import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './routes/_authenticated/settings/change-password'
 import { Route as AuthenticatedSettingsBankRouteImport } from './routes/_authenticated/settings/bank'
+import { Route as AuthenticatedPayoutsPayoutIdRouteImport } from './routes/_authenticated/payouts/$payoutId'
+import { Route as AuthenticatedDepositVerifyDepositIdRouteImport } from './routes/_authenticated/deposit/verify/$depositId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -156,22 +158,24 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedPayoutsRoute = AuthenticatedPayoutsRouteImport.update({
-  id: '/payouts',
-  path: '/payouts',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedFavouriteBallsRoute =
   AuthenticatedFavouriteBallsRouteImport.update({
     id: '/favourite-balls',
     path: '/favourite-balls',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedDepositRoute = AuthenticatedDepositRouteImport.update({
-  id: '/deposit',
-  path: '/deposit',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
+const AuthenticatedPayoutsIndexRoute =
+  AuthenticatedPayoutsIndexRouteImport.update({
+    id: '/payouts/',
+    path: '/payouts/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDepositIndexRoute =
+  AuthenticatedDepositIndexRouteImport.update({
+    id: '/deposit/',
+    path: '/deposit/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSettingsVerifyEmailRoute =
   AuthenticatedSettingsVerifyEmailRouteImport.update({
     id: '/settings/verify-email',
@@ -202,13 +206,23 @@ const AuthenticatedSettingsBankRoute =
     path: '/settings/bank',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPayoutsPayoutIdRoute =
+  AuthenticatedPayoutsPayoutIdRouteImport.update({
+    id: '/payouts/$payoutId',
+    path: '/payouts/$payoutId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDepositVerifyDepositIdRoute =
+  AuthenticatedDepositVerifyDepositIdRouteImport.update({
+    id: '/deposit/verify/$depositId',
+    path: '/deposit/verify/$depositId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/app': typeof AppRoute
   '/auth': typeof AuthRouteWithChildren
-  '/deposit': typeof AuthenticatedDepositRoute
   '/favourite-balls': typeof AuthenticatedFavouriteBallsRoute
-  '/payouts': typeof AuthenticatedPayoutsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
@@ -228,18 +242,20 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof LayoutIndexRoute
+  '/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
   '/settings/bank': typeof AuthenticatedSettingsBankRoute
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/settings/verify-email': typeof AuthenticatedSettingsVerifyEmailRoute
+  '/deposit': typeof AuthenticatedDepositIndexRoute
+  '/payouts': typeof AuthenticatedPayoutsIndexRoute
+  '/deposit/verify/$depositId': typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 export interface FileRoutesByTo {
   '/app': typeof AppRoute
   '/auth': typeof AuthRouteWithChildren
-  '/deposit': typeof AuthenticatedDepositRoute
   '/favourite-balls': typeof AuthenticatedFavouriteBallsRoute
-  '/payouts': typeof AuthenticatedPayoutsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
@@ -259,11 +275,15 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof LayoutIndexRoute
+  '/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
   '/settings/bank': typeof AuthenticatedSettingsBankRoute
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/settings/verify-email': typeof AuthenticatedSettingsVerifyEmailRoute
+  '/deposit': typeof AuthenticatedDepositIndexRoute
+  '/payouts': typeof AuthenticatedPayoutsIndexRoute
+  '/deposit/verify/$depositId': typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -271,9 +291,7 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/app': typeof AppRoute
   '/auth': typeof AuthRouteWithChildren
-  '/_authenticated/deposit': typeof AuthenticatedDepositRoute
   '/_authenticated/favourite-balls': typeof AuthenticatedFavouriteBallsRoute
-  '/_authenticated/payouts': typeof AuthenticatedPayoutsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
@@ -293,20 +311,22 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_authenticated/payouts/$payoutId': typeof AuthenticatedPayoutsPayoutIdRoute
   '/_authenticated/settings/bank': typeof AuthenticatedSettingsBankRoute
   '/_authenticated/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/_authenticated/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/_authenticated/settings/verify-email': typeof AuthenticatedSettingsVerifyEmailRoute
+  '/_authenticated/deposit/': typeof AuthenticatedDepositIndexRoute
+  '/_authenticated/payouts/': typeof AuthenticatedPayoutsIndexRoute
+  '/_authenticated/deposit/verify/$depositId': typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/app'
     | '/auth'
-    | '/deposit'
     | '/favourite-balls'
-    | '/payouts'
     | '/profile'
     | '/tickets'
     | '/transactions'
@@ -326,18 +346,20 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/signup'
     | '/'
+    | '/payouts/$payoutId'
     | '/settings/bank'
     | '/settings/change-password'
     | '/settings/email'
     | '/settings/profile'
     | '/settings/verify-email'
+    | '/deposit'
+    | '/payouts'
+    | '/deposit/verify/$depositId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/app'
     | '/auth'
-    | '/deposit'
     | '/favourite-balls'
-    | '/payouts'
     | '/profile'
     | '/tickets'
     | '/transactions'
@@ -357,20 +379,22 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/signup'
     | '/'
+    | '/payouts/$payoutId'
     | '/settings/bank'
     | '/settings/change-password'
     | '/settings/email'
     | '/settings/profile'
     | '/settings/verify-email'
+    | '/deposit'
+    | '/payouts'
+    | '/deposit/verify/$depositId'
   id:
     | '__root__'
     | '/_authenticated'
     | '/_layout'
     | '/app'
     | '/auth'
-    | '/_authenticated/deposit'
     | '/_authenticated/favourite-balls'
-    | '/_authenticated/payouts'
     | '/_authenticated/profile'
     | '/_authenticated/tickets'
     | '/_authenticated/transactions'
@@ -390,11 +414,15 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/signup'
     | '/_layout/'
+    | '/_authenticated/payouts/$payoutId'
     | '/_authenticated/settings/bank'
     | '/_authenticated/settings/change-password'
     | '/_authenticated/settings/email'
     | '/_authenticated/settings/profile'
     | '/_authenticated/settings/verify-email'
+    | '/_authenticated/deposit/'
+    | '/_authenticated/payouts/'
+    | '/_authenticated/deposit/verify/$depositId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -567,13 +595,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/payouts': {
-      id: '/_authenticated/payouts'
-      path: '/payouts'
-      fullPath: '/payouts'
-      preLoaderRoute: typeof AuthenticatedPayoutsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/favourite-balls': {
       id: '/_authenticated/favourite-balls'
       path: '/favourite-balls'
@@ -581,11 +602,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFavouriteBallsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/deposit': {
-      id: '/_authenticated/deposit'
+    '/_authenticated/payouts/': {
+      id: '/_authenticated/payouts/'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof AuthenticatedPayoutsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/deposit/': {
+      id: '/_authenticated/deposit/'
       path: '/deposit'
       fullPath: '/deposit'
-      preLoaderRoute: typeof AuthenticatedDepositRouteImport
+      preLoaderRoute: typeof AuthenticatedDepositIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/settings/verify-email': {
@@ -623,40 +651,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsBankRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/payouts/$payoutId': {
+      id: '/_authenticated/payouts/$payoutId'
+      path: '/payouts/$payoutId'
+      fullPath: '/payouts/$payoutId'
+      preLoaderRoute: typeof AuthenticatedPayoutsPayoutIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/deposit/verify/$depositId': {
+      id: '/_authenticated/deposit/verify/$depositId'
+      path: '/deposit/verify/$depositId'
+      fullPath: '/deposit/verify/$depositId'
+      preLoaderRoute: typeof AuthenticatedDepositVerifyDepositIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedDepositRoute: typeof AuthenticatedDepositRoute
   AuthenticatedFavouriteBallsRoute: typeof AuthenticatedFavouriteBallsRoute
-  AuthenticatedPayoutsRoute: typeof AuthenticatedPayoutsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
   AuthenticatedWithdrawalRoute: typeof AuthenticatedWithdrawalRoute
+  AuthenticatedPayoutsPayoutIdRoute: typeof AuthenticatedPayoutsPayoutIdRoute
   AuthenticatedSettingsBankRoute: typeof AuthenticatedSettingsBankRoute
   AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
   AuthenticatedSettingsEmailRoute: typeof AuthenticatedSettingsEmailRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
   AuthenticatedSettingsVerifyEmailRoute: typeof AuthenticatedSettingsVerifyEmailRoute
+  AuthenticatedDepositIndexRoute: typeof AuthenticatedDepositIndexRoute
+  AuthenticatedPayoutsIndexRoute: typeof AuthenticatedPayoutsIndexRoute
+  AuthenticatedDepositVerifyDepositIdRoute: typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedDepositRoute: AuthenticatedDepositRoute,
   AuthenticatedFavouriteBallsRoute: AuthenticatedFavouriteBallsRoute,
-  AuthenticatedPayoutsRoute: AuthenticatedPayoutsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
   AuthenticatedWithdrawalRoute: AuthenticatedWithdrawalRoute,
+  AuthenticatedPayoutsPayoutIdRoute: AuthenticatedPayoutsPayoutIdRoute,
   AuthenticatedSettingsBankRoute: AuthenticatedSettingsBankRoute,
   AuthenticatedSettingsChangePasswordRoute:
     AuthenticatedSettingsChangePasswordRoute,
   AuthenticatedSettingsEmailRoute: AuthenticatedSettingsEmailRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
   AuthenticatedSettingsVerifyEmailRoute: AuthenticatedSettingsVerifyEmailRoute,
+  AuthenticatedDepositIndexRoute: AuthenticatedDepositIndexRoute,
+  AuthenticatedPayoutsIndexRoute: AuthenticatedPayoutsIndexRoute,
+  AuthenticatedDepositVerifyDepositIdRoute:
+    AuthenticatedDepositVerifyDepositIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

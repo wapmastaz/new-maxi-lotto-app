@@ -94,7 +94,7 @@ function App() {
             <h2 className="text-2xl mb-0 font-semibold text-primary-900">Top Winners</h2>
 
             {/* see all */}
-            <Button asChild className="text-sm text-muted-foreground" variant={"link"}>
+            <Button asChild className="text-sm text-muted-foreground" variant={"ghost"}>
               <Link to={"/"} className="text-background">
                 See All
               </Link>

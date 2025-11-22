@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite'
+// @ts-ignore
 import viteReact from '@vitejs/plugin-react'
+// @ts-ignore
 import tailwindcss from '@tailwindcss/vite'
-
+// @ts-ignore
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import { fileURLToPath, URL } from 'node:url'
 import { nitroV2Plugin } from '@tanstack/nitro-v2-vite-plugin'

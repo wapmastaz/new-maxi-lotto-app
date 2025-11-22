@@ -1,5 +1,5 @@
 import { fetchTransactions } from '@/services/Transactions';
-import { Transaction } from '@/types/transaction';
+import type {Transaction} from '@/types/transaction';
 import { useQuery } from '@tanstack/react-query';
 
 export const useFetchTransactions = (filters: {
