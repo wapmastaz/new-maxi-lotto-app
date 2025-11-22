@@ -1,11 +1,10 @@
-'use client';
 
-import React from 'react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { Command as CommandPrimitive } from 'cmdk';
-import { Check, LucideIcon, Search } from 'lucide-react';
+import { Check, type LucideIcon, Search } from 'lucide-react';
+import * as React from 'react';
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
@@ -114,6 +113,7 @@ interface ButtonArrowProps extends React.SVGProps<SVGSVGElement> {
   icon?: LucideIcon; // Allows passing any Lucide icon
 }
 
+// @ts-ignore
 function CommandCheck({ icon: Icon = Check, className, ...props }: ButtonArrowProps) {
   return (
     <Icon

@@ -29,7 +29,7 @@ const EmailVerificationAlert = ({ }: EmailVerificationAlertProps) => {
           </p>
           <div className="space-x-3.5 underline mt-2">
             <Button
-              variant="link"
+              variant="ghost"
               asChild
             >
               <Link to="/profile">Verify Email</Link>

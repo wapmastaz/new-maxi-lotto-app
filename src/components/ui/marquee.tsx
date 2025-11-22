@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, useRef } from 'react';
+import {type ComponentPropsWithoutRef, useMemo, useRef} from 'react';
 import { cn } from '@/lib/utils';
 
 interface MarqueeProps extends ComponentPropsWithoutRef<'div'> {
@@ -80,7 +80,7 @@ export function Marquee({
       role={ariaRole}
       tabIndex={0}
     >
-      {React.useMemo(
+      {useMemo(
         () => (
           <>
             {Array.from({ length: repeat }, (_, i) => (

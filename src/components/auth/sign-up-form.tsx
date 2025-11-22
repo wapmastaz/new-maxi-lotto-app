@@ -1,5 +1,3 @@
-import React, { useState } from 'react'
-
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage, } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -14,6 +12,7 @@ import { registerUser } from '@/services/AuthService';
 import useAuthStore from '@/store/authStore';
 import { toast } from 'sonner';
 import { Link, redirect } from '@tanstack/react-router';
+import { useState } from "react";
 
 
 const SignUpForm = () => {
@@ -178,7 +177,7 @@ const SignUpForm = () => {
                 />
               </FormControl>
               <div className="space-y-0 text-foreground/70 leading-normal">
-                By creating an account your agree to our <Link to={"/terms-and-conditions"}
+                By creating an account your agree to our <Link to={"/terms-and-condition"}
                   className="text-secondary-900 font-medium hover:underline">Term
                   and Conditions</Link>
               </div>

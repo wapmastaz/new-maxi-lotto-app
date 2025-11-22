@@ -36,7 +36,7 @@ const forgotPasswordForm = () => {
 
     try {
       setLoading(true);
-      const response = await requestForgotPassword(email)
+      await requestForgotPassword(email)
       // console.log(response);
       toast.success("Password reset link sent to your email")
       form.reset();
