@@ -67,15 +67,15 @@ const GameCarousel: React.FC<PropType> = (props) => {
                       className="rounded object-fill" />
                   </div>
                   <div className="game-details flex flex-col">
-                    <h3 className="font-bold text-primary-900">{game.gameName}</h3>
-                    <p className="text-muted-foreground  text-sm font-poppins">
+                    <h3 className="font-bold text-sm text-primary-900">{game.gameName}</h3>
+                    <p className="text-muted-foreground text-xs font-poppins">
                       {fullDateTimeFormat(game.endDateTime)}
                     </p>
                   </div>
                 </div>
                 {/* play button */}
                 <div className="flex">
-                  <Button type="button" onClick={() => handleSelectedGame(game)} className="w-full bg-primary-900 px-6 text-background rounded-full hover:opacity-80" disabled={isGameClosed(game.endDateTime)}>
+                  <Button type="button" size="md" onClick={() => handleSelectedGame(game)} className="w-full bg-primary-900 px-4 h-9 text-background rounded-full hover:opacity-80" disabled={isGameClosed(game.endDateTime)}>
                     Play Now
                   </Button>
                 </div>

@@ -31,7 +31,7 @@ function App() {
           </h1>
           {/* play now */}
           <Button asChild className="bg-rose-500 hover:bg-rose-700 text-xl rounded-full sm:text-2xl" size={"lg"}>
-            <Link to={"/"} className="text-background">
+            <Link to="/play" className="text-background">
               Play Now
             </Link>
           </Button>

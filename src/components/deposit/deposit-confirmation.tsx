@@ -53,8 +53,8 @@ export function ConfirmationModal({open, setOpen, data, user, handleFormReset}: 
         amount: data.amount * 100, // Paystack expects amount in kobo
         ref: data.transactionRefrence,
         callback: (response) => {
-          console.log('Payment successful', response);
-          toast.success(`Payment complete! Ref: ${response.reference}`);
+          // console.log('Payment successful', response);
+          // toast.success(`Payment complete! Ref: ${response.reference}`);
           setOpen(false); // Close modal on success
           queryClient.invalidateQueries({queryKey: ['userProfile']})
           // 🎯 IMPORTANT: Call your backend here to verify payment:

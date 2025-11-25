@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import * as moment from 'moment'
+import moment from 'moment'
 import { gradients } from '@/constants';
 /**
  * Merges Tailwind class names, resolving any conflicts.
@@ -97,9 +97,7 @@ export const timeOnlyFormat = (gameTime: string) => {
 export const isGameClosed = (endGameTime: string) => {
 	return moment(endGameTime, 'YYYY-MM-DD h:mm:ss A').isBefore(
 		moment(new Date()).subtract(1, 'seconds')
-	)
-		? true
-		: false;
+	);
 };
 
 export const fullDateFormat = (date: string) => {
