@@ -11,7 +11,7 @@ import z from "zod";
 import { registerUser } from '@/services/AuthService';
 import useAuthStore from '@/store/authStore';
 import { toast } from 'sonner';
-import { Link, redirect } from '@tanstack/react-router';
+import {Link, useNavigate} from '@tanstack/react-router';
 import { useState } from "react";
 
 
@@ -19,7 +19,10 @@ const SignUpForm = () => {
 
   const { setAccessToken, setUser } = useAuthStore((state) => state);
 
+  const navigate = useNavigate();
+
   const [showPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   // const toggleShowPassword = () => setShowPassword(!showPassword);
@@ -46,10 +49,11 @@ const SignUpForm = () => {
       // set user
       setUser(user)
 
-      // redirect
-      redirect({ to: '/app' })
       // show toast
       toast.success("Registration successful")
+
+      // redirect
+      await navigate({ to: "/profile" })
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
