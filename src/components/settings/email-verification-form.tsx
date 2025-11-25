@@ -10,12 +10,15 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import { verifyUserEmailToken } from '@/services/UserService';
+import {useNavigate} from "@tanstack/react-router";
 
 const withdrawalSchema = z.object({
   token: z.string().min(1),
 });
 
 const EmailVerificationForm = () => {
+
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,6 +42,7 @@ const EmailVerificationForm = () => {
         toast.success("Email verified successfully");
         // reset form
         form.reset();
+        await navigate({to: "/profile"})
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

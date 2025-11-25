@@ -1,9 +1,16 @@
 import EmailVerificationForm from '@/components/settings/email-verification-form'
 import { useUserProfile } from '@/hooks/useUserProfile'
 import { maskEmail } from '@/lib/utils'
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute, redirect} from '@tanstack/react-router'
+import {toast} from "sonner";
 
 export const Route = createFileRoute('/_authenticated/settings/verify-email')({
+  beforeLoad: ({context}) => {
+    if (context.auth.minimalUser?.isVerified) {
+      toast.error('Your email is already verified.');
+      throw redirect({to: '/profile'});
+    }
+  },
   component: RouteComponent,
 })
 

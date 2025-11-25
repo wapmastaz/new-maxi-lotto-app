@@ -1,17 +1,17 @@
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { useUserProfile } from '@/hooks/useUserProfile';
-import { maskEmail } from '@/lib/utils';
-import { sendEmailVerification } from '@/services/AuthService';
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { useState } from 'react';
-import { toast } from 'sonner';
+import {Button} from '@/components/ui/button';
+import {Spinner} from '@/components/ui/spinner';
+import {useUserProfile} from '@/hooks/useUserProfile';
+import {maskEmail} from '@/lib/utils';
+import {sendEmailVerification} from '@/services/AuthService';
+import {createFileRoute, redirect, useNavigate} from '@tanstack/react-router'
+import {useState} from 'react';
+import {toast} from 'sonner';
 
 export const Route = createFileRoute('/_authenticated/settings/email')({
-  beforeLoad: ({ context }) => {
+  beforeLoad: ({context}) => {
     if (context.auth.minimalUser?.isVerified) {
       toast.error('Your email is already verified.');
-      throw redirect({ to: '/profile' });
+      throw redirect({to: '/profile'});
     }
   },
   component: RouteComponent,
@@ -19,9 +19,11 @@ export const Route = createFileRoute('/_authenticated/settings/email')({
 
 function RouteComponent() {
 
+  const navigate = useNavigate()
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { data: user } = useUserProfile()
+  const {data: user} = useUserProfile()
 
   const handleVerifyEmail = async () => {
     // Implement email verification logic here
@@ -32,13 +34,11 @@ function RouteComponent() {
 
       toast.success('Verification email sent successfully!');
 
-      redirect({ to: '/settings/verify-email' });
+      await navigate({to: '/settings/verify-email'});
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log('Error sending verification email:', error.message);
       toast.error(`Error: ${error.message}`);
-
     } finally {
       setIsLoading(false);
     }
@@ -62,9 +62,9 @@ function RouteComponent() {
 
             {/* request code button */}
             <Button type="button" disabled={isLoading}
-              onClick={handleVerifyEmail}
-              className="w-full mb-4 bg-accent-2-900 text-background text-sm rounded-2xl uppercase hover:opacity-70 hover:bg-primary">
-              {isLoading ? <Spinner className="animate-spin size-4" /> : null}
+                    onClick={handleVerifyEmail}
+                    className="w-full mb-4 bg-accent-2-900 text-background text-sm rounded-2xl uppercase hover:opacity-70 hover:bg-primary">
+              {isLoading ? <Spinner className="animate-spin size-4"/> : null}
               {isLoading ? 'Requesting...' : 'Request Code'}
             </Button>
           </div>
