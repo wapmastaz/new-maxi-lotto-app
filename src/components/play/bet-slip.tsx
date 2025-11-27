@@ -24,14 +24,11 @@ interface BetSlipProps {
 }
 
 
-const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls, betLists, setBetsList, selectedGame, handleResetBetSlips, setBankerBalls, setAgainstBalls, bankerBalls }: BetSlipProps) => {
-
-  console.log("betLists", betLists);
+const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls, setBetsList, selectedGame, handleResetBetSlips, setBankerBalls, setAgainstBalls, bankerBalls }: BetSlipProps) => {
 
   const [stake, setStake] = useState<number>(0)
   const [maxWinning, setMaxWinning] = useState<number>(0)
   const [numberOfLines, setNumberOfLines] = useState<number>(0)
-
 
   const handleStakeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value)
@@ -53,7 +50,7 @@ const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls,
     let noOfLines = 0;
 
     const code = betType.code.toUpperCase();
-    const r = betType.minimumNumberOfBalls; // The number of balls that must match (e.g., 2 for PERM 2)
+    const r = betType.minimumNumberOfBalls;
 
     // --- Core Logic ---
 
@@ -87,7 +84,7 @@ const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls,
 
     // 3. DIRECT/PERM Logic (Standard lotto bets)
     else {
-      const n = selectedBalls.length;
+      const n = selectedBalls.length > 5 ? 5 : selectedBalls.length;
 
       // If not enough balls, reset and return
       if (n < r) {

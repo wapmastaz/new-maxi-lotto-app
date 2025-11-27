@@ -52,7 +52,6 @@ function RouteComponent() {
   const [selectionMode, setSelectionMode] = useState<"normal" | "banker" | "against">("normal");
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-
   const { data: betTypes } = useGetBetTypes()
   const { minimalUser: user, syncUser } = useAuthStore(state => state)
   const { data: games } = useFetchDailyGames()
