@@ -9,17 +9,18 @@ interface verifyResponseProps {
 export const depositFunds = async (
 	customerId: number,
 	amount: number,
-	paymentProvider: string,
+	paymentProvider?: string,
 	bankId?: number
 ): Promise<DepositResponse> => {
 	try {
 		// /api/Payments/paystack/Deposit/Request
+		const paymentProviderValue = paymentProvider || "Paystack"
 		const response = await apiClient.post<DepositResponse>(
 			'Payments/paystack/Deposit/Request',
 			{
 				customerId,
 				amount,
-				paymentProvider,
+				paymentProviderValue,
 				bankId,
 			}
 		);

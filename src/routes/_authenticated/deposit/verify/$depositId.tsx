@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute, Link} from '@tanstack/react-router'
 import {verifyDeposit} from "@/services/PaymentService.ts";
 
 import {Card, CardContent, CardHeader, CardHeading, CardTitle,} from '@/components/ui/card';
@@ -71,9 +71,12 @@ function RouteComponent() {
 
           {/* Go home button */}
           <div className="mt-6">
-            <Button size="lg" variant="destructive"
+            <Button size="lg" asChild variant="destructive"
                     className="w-full rounded-3xl text-background font-poppins font-semibold">
-              Go to Home
+              <Link to="/deposit">
+                Go to Deposit
+              </Link>
+
             </Button>
           </div>
 

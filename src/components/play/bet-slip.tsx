@@ -322,6 +322,13 @@ const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls,
         )}
 
         <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+          <span className="font-bold">Lines:</span>
+          <span className="text-foreground-muted">
+
+          </span>
+        </div>
+
+        <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
           <span className="font-bold">Total Stake:</span>
           <span className="text-foreground-muted">
             ₦{stake}

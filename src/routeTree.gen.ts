@@ -30,11 +30,12 @@ import { Route as LayoutAboutRouteImport } from './routes/_layout/about'
 import { Route as AuthenticatedWithdrawalRouteImport } from './routes/_authenticated/withdrawal'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
-import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedFavouriteBallsRouteImport } from './routes/_authenticated/favourite-balls'
+import { Route as AuthenticatedTicketsIndexRouteImport } from './routes/_authenticated/tickets/index'
 import { Route as AuthenticatedPayoutsIndexRouteImport } from './routes/_authenticated/payouts/index'
 import { Route as AuthenticatedDepositIndexRouteImport } from './routes/_authenticated/deposit/index'
+import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets/$ticketId'
 import { Route as AuthenticatedSettingsVerifyEmailRouteImport } from './routes/_authenticated/settings/verify-email'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings/profile'
 import { Route as AuthenticatedSettingsEmailRouteImport } from './routes/_authenticated/settings/email'
@@ -148,11 +149,6 @@ const AuthenticatedTransactionsRoute =
     path: '/transactions',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedTicketsRoute = AuthenticatedTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -162,6 +158,12 @@ const AuthenticatedFavouriteBallsRoute =
   AuthenticatedFavouriteBallsRouteImport.update({
     id: '/favourite-balls',
     path: '/favourite-balls',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedTicketsIndexRoute =
+  AuthenticatedTicketsIndexRouteImport.update({
+    id: '/tickets/',
+    path: '/tickets/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedPayoutsIndexRoute =
@@ -174,6 +176,12 @@ const AuthenticatedDepositIndexRoute =
   AuthenticatedDepositIndexRouteImport.update({
     id: '/deposit/',
     path: '/deposit/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedTicketsTicketIdRoute =
+  AuthenticatedTicketsTicketIdRouteImport.update({
+    id: '/tickets/$ticketId',
+    path: '/tickets/$ticketId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedSettingsVerifyEmailRoute =
@@ -224,7 +232,6 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/favourite-balls': typeof AuthenticatedFavouriteBallsRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/tickets': typeof AuthenticatedTicketsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/withdrawal': typeof AuthenticatedWithdrawalRoute
@@ -248,8 +255,10 @@ export interface FileRoutesByFullPath {
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/settings/verify-email': typeof AuthenticatedSettingsVerifyEmailRoute
+  '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/deposit': typeof AuthenticatedDepositIndexRoute
   '/payouts': typeof AuthenticatedPayoutsIndexRoute
+  '/tickets': typeof AuthenticatedTicketsIndexRoute
   '/deposit/verify/$depositId': typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 export interface FileRoutesByTo {
@@ -257,7 +266,6 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/favourite-balls': typeof AuthenticatedFavouriteBallsRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/tickets': typeof AuthenticatedTicketsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/withdrawal': typeof AuthenticatedWithdrawalRoute
@@ -281,8 +289,10 @@ export interface FileRoutesByTo {
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/settings/verify-email': typeof AuthenticatedSettingsVerifyEmailRoute
+  '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/deposit': typeof AuthenticatedDepositIndexRoute
   '/payouts': typeof AuthenticatedPayoutsIndexRoute
+  '/tickets': typeof AuthenticatedTicketsIndexRoute
   '/deposit/verify/$depositId': typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 export interface FileRoutesById {
@@ -293,7 +303,6 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/_authenticated/favourite-balls': typeof AuthenticatedFavouriteBallsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/_authenticated/withdrawal': typeof AuthenticatedWithdrawalRoute
@@ -317,8 +326,10 @@ export interface FileRoutesById {
   '/_authenticated/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/_authenticated/settings/verify-email': typeof AuthenticatedSettingsVerifyEmailRoute
+  '/_authenticated/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/_authenticated/deposit/': typeof AuthenticatedDepositIndexRoute
   '/_authenticated/payouts/': typeof AuthenticatedPayoutsIndexRoute
+  '/_authenticated/tickets/': typeof AuthenticatedTicketsIndexRoute
   '/_authenticated/deposit/verify/$depositId': typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 export interface FileRouteTypes {
@@ -328,7 +339,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favourite-balls'
     | '/profile'
-    | '/tickets'
     | '/transactions'
     | '/wallet'
     | '/withdrawal'
@@ -352,8 +362,10 @@ export interface FileRouteTypes {
     | '/settings/email'
     | '/settings/profile'
     | '/settings/verify-email'
+    | '/tickets/$ticketId'
     | '/deposit'
     | '/payouts'
+    | '/tickets'
     | '/deposit/verify/$depositId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -361,7 +373,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favourite-balls'
     | '/profile'
-    | '/tickets'
     | '/transactions'
     | '/wallet'
     | '/withdrawal'
@@ -385,8 +396,10 @@ export interface FileRouteTypes {
     | '/settings/email'
     | '/settings/profile'
     | '/settings/verify-email'
+    | '/tickets/$ticketId'
     | '/deposit'
     | '/payouts'
+    | '/tickets'
     | '/deposit/verify/$depositId'
   id:
     | '__root__'
@@ -396,7 +409,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/favourite-balls'
     | '/_authenticated/profile'
-    | '/_authenticated/tickets'
     | '/_authenticated/transactions'
     | '/_authenticated/wallet'
     | '/_authenticated/withdrawal'
@@ -420,8 +432,10 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/email'
     | '/_authenticated/settings/profile'
     | '/_authenticated/settings/verify-email'
+    | '/_authenticated/tickets/$ticketId'
     | '/_authenticated/deposit/'
     | '/_authenticated/payouts/'
+    | '/_authenticated/tickets/'
     | '/_authenticated/deposit/verify/$depositId'
   fileRoutesById: FileRoutesById
 }
@@ -581,13 +595,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/tickets': {
-      id: '/_authenticated/tickets'
-      path: '/tickets'
-      fullPath: '/tickets'
-      preLoaderRoute: typeof AuthenticatedTicketsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -602,6 +609,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFavouriteBallsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/tickets/': {
+      id: '/_authenticated/tickets/'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof AuthenticatedTicketsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/payouts/': {
       id: '/_authenticated/payouts/'
       path: '/payouts'
@@ -614,6 +628,13 @@ declare module '@tanstack/react-router' {
       path: '/deposit'
       fullPath: '/deposit'
       preLoaderRoute: typeof AuthenticatedDepositIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/tickets/$ticketId': {
+      id: '/_authenticated/tickets/$ticketId'
+      path: '/tickets/$ticketId'
+      fullPath: '/tickets/$ticketId'
+      preLoaderRoute: typeof AuthenticatedTicketsTicketIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/settings/verify-email': {
@@ -671,7 +692,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedFavouriteBallsRoute: typeof AuthenticatedFavouriteBallsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
   AuthenticatedWithdrawalRoute: typeof AuthenticatedWithdrawalRoute
@@ -681,15 +701,16 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSettingsEmailRoute: typeof AuthenticatedSettingsEmailRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
   AuthenticatedSettingsVerifyEmailRoute: typeof AuthenticatedSettingsVerifyEmailRoute
+  AuthenticatedTicketsTicketIdRoute: typeof AuthenticatedTicketsTicketIdRoute
   AuthenticatedDepositIndexRoute: typeof AuthenticatedDepositIndexRoute
   AuthenticatedPayoutsIndexRoute: typeof AuthenticatedPayoutsIndexRoute
+  AuthenticatedTicketsIndexRoute: typeof AuthenticatedTicketsIndexRoute
   AuthenticatedDepositVerifyDepositIdRoute: typeof AuthenticatedDepositVerifyDepositIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedFavouriteBallsRoute: AuthenticatedFavouriteBallsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
   AuthenticatedWithdrawalRoute: AuthenticatedWithdrawalRoute,
@@ -700,8 +721,10 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsEmailRoute: AuthenticatedSettingsEmailRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
   AuthenticatedSettingsVerifyEmailRoute: AuthenticatedSettingsVerifyEmailRoute,
+  AuthenticatedTicketsTicketIdRoute: AuthenticatedTicketsTicketIdRoute,
   AuthenticatedDepositIndexRoute: AuthenticatedDepositIndexRoute,
   AuthenticatedPayoutsIndexRoute: AuthenticatedPayoutsIndexRoute,
+  AuthenticatedTicketsIndexRoute: AuthenticatedTicketsIndexRoute,
   AuthenticatedDepositVerifyDepositIdRoute:
     AuthenticatedDepositVerifyDepositIdRoute,
 }

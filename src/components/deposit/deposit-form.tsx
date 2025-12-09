@@ -9,17 +9,7 @@ import {
 } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -30,7 +20,6 @@ import { useState } from 'react';
 import type { DepositResponse } from '@/types/api';
 import { Spinner } from '@/components/ui/spinner';
 import type { User } from '@/types/user';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ConfirmationModal } from './deposit-confirmation';
 
 // Config arrays
@@ -40,25 +29,25 @@ const paymentMethods = [
   { id: 'ussd', label: 'USSD' },
 ];
 
-const channels = [
-  {
-    id: 'paystack',
-    name: 'Paystack',
-    logo: '/paystack/Paystack_idIi-h8rZ0_7.png',
-    fallback: 'PS',
-  },
-  {
-    id: 'flutterwave',
-    name: 'Flutterwave',
-    logo: '/flutterwave/Flutterwave_id3uOuItwN_13.png',
-    fallback: 'FW',
-  },
-];
+// const channels = [
+//   {
+//     id: 'paystack',
+//     name: 'Paystack',
+//     logo: '/paystack/Paystack_idIi-h8rZ0_7.png',
+//     fallback: 'PS',
+//   },
+//   {
+//     id: 'flutterwave',
+//     name: 'Flutterwave',
+//     logo: '/flutterwave/Flutterwave_id3uOuItwN_13.png',
+//     fallback: 'FW',
+//   },
+// ];
 
 // Validation schema
 const FormSchema = z.object({
   selectedOption: z.string().nonempty({ message: 'You must select a payment method.' }),
-  channel: z.string().nonempty({ message: 'You must select a payment channel.' }),
+  channel: z.string().optional(),
   amount: z.number().min(100, { message: 'Amount must be greater than 100.' }),
 });
 
@@ -76,7 +65,7 @@ export const DepositForm = ({ user }: DepositFormProps) => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       selectedOption: '',
-      channel: '',
+      channel: 'Paystack',
       amount: 0,
     },
   });
@@ -139,41 +128,41 @@ export const DepositForm = ({ user }: DepositFormProps) => {
         />
 
         {/* Payment Channel Select */}
-        <FormField
-          control={form.control}
-          name="channel"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Payment Channel</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a payment channel" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel className="text-xs py-1 font-normal text-muted-foreground ps-2">
-                      Available Channels
-                    </SelectLabel>
-                    {channels.map((channel) => (
-                      <SelectItem key={channel.id} value={channel.id}>
-                        <span className="flex items-center gap-2">
-                          <Avatar className="size-6">
-                            <AvatarImage src={channel.logo} alt={channel.name} />
-                            <AvatarFallback>{channel.fallback}</AvatarFallback>
-                          </Avatar>
-                          <span>{channel.name}</span>
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  control={form.control}*/}
+        {/*  name="channel"*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem>*/}
+        {/*      <FormLabel>Payment Channel</FormLabel>*/}
+        {/*      <Select onValueChange={field.onChange} value={field.value}>*/}
+        {/*        <FormControl>*/}
+        {/*          <SelectTrigger className="w-full">*/}
+        {/*            <SelectValue placeholder="Select a payment channel" />*/}
+        {/*          </SelectTrigger>*/}
+        {/*        </FormControl>*/}
+        {/*        <SelectContent>*/}
+        {/*          <SelectGroup>*/}
+        {/*            <SelectLabel className="text-xs py-1 font-normal text-muted-foreground ps-2">*/}
+        {/*              Available Channels*/}
+        {/*            </SelectLabel>*/}
+        {/*            {channels.map((channel) => (*/}
+        {/*              <SelectItem key={channel.id} value={channel.id}>*/}
+        {/*                <span className="flex items-center gap-2">*/}
+        {/*                  <Avatar className="size-6">*/}
+        {/*                    <AvatarImage src={channel.logo} alt={channel.name} />*/}
+        {/*                    <AvatarFallback>{channel.fallback}</AvatarFallback>*/}
+        {/*                  </Avatar>*/}
+        {/*                  <span>{channel.name}</span>*/}
+        {/*                </span>*/}
+        {/*              </SelectItem>*/}
+        {/*            ))}*/}
+        {/*          </SelectGroup>*/}
+        {/*        </SelectContent>*/}
+        {/*      </Select>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
         {/* Amount Input */}
         <FormField

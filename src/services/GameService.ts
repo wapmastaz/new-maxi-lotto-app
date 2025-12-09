@@ -185,3 +185,19 @@ export const fetchLastFourWinner = async (): Promise<WinnerTicket[]> => {
 		throw new Error('Network error, please try again.');
 	}
 };
+
+export const fetchTicketById = async (id: number): Promise<GameTicket> => {
+	try {
+		const response = await apiClient.get<GameTicket>(
+			`Ticket/byid/${id}`
+		);
+		return response.data;
+	} catch (error: any) {
+		if (error.response) {
+			throw new Error(
+				error.response.data || 'Failed to fetch ticket. Please try again.'
+			);
+		}
+		throw new Error('Network error, please try again.');
+	}
+};

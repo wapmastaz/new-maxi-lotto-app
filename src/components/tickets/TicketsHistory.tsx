@@ -41,7 +41,6 @@ interface PageProps {
   endDate?: string;
 }
 
-
 export const TicketsHistory = () => {
 
   const [pagination, setPagination] = useState<PageProps>({
@@ -131,7 +130,6 @@ export const TicketsHistory = () => {
           </ScrollArea>
         </CardTable>
         <CardFooter className="p-0 flex items-center justify-between gap-2">
-
 
           <Pagination className="justify-start w-fit mx-0">
             <PaginationContent className='gap-2'>

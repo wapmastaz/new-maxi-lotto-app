@@ -91,8 +91,8 @@ const Navbar = () => {
             <MobileNav menu={menu} />
           </div>
           <Link to="/app" className="flex items-center">
-            <Image src="/logo.png" alt="MaxiLotto Logo"
-              className="aspect-auto object-cover" width={99} height={25} />
+            {/*<Image src="/logo.png" alt="MaxiLotto Logo"*/}
+            {/*  className="aspect-auto object-cover" width={99} height={25} />*/}
           </Link>
         </div>
 

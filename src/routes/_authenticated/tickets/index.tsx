@@ -1,7 +1,7 @@
 import { TicketsHistory } from '@/components/tickets/TicketsHistory'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_authenticated/tickets')({
+export const Route = createFileRoute('/_authenticated/tickets/')({
   component: RouteComponent,
 })
 

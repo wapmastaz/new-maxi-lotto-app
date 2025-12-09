@@ -7,7 +7,6 @@ import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
 import { useCallback } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
-import { DotButton, useDotButton } from '@/components/embla-carousel-dot-circle';
 import { Image } from '@unpic/react';
 
 type PropType = {
@@ -24,8 +23,6 @@ const GameCarousel: React.FC<PropType> = (props) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [
     AutoScroll({ playOnInit: false }), Autoplay({ playOnInit: true, delay: 4000 })
   ])
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi)
 
   const {
     prevBtnDisabled,
@@ -95,18 +92,6 @@ const GameCarousel: React.FC<PropType> = (props) => {
             onClick={() => onButtonAutoplayClick(onNextButtonClick)}
             disabled={nextBtnDisabled}
           />
-        </div>
-        <div className="embla__dots flex gap-1">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              onClick={() => onDotButtonClick(index)}
-              index={index}
-              className={'embla__dot'.concat(
-                index === selectedIndex ? ' embla__dot--selected' : ''
-              )}
-            />
-          ))}
         </div>
       </div>
     </div>

@@ -494,38 +494,6 @@ function RouteComponent() {
               </div>
             </div>
 
-            {/* ✨ NEW: Banker/Against Selection Mode UI ✨ */}
-            {/* {selectedBetType && (selectedBetType.code.toUpperCase().includes("BANKER") || selectedBetType.code.toUpperCase().includes("AGAINST")) && (
-              <div className="flex justify-center items-center my-4 p-2 bg-white/20 rounded-lg gap-4">
-                <div className="flex flex-col items-center">
-                  <span className="text-white font-semibold mb-2">1. Select Banker(s)</span>
-                  <Button
-                    onClick={() => setSelectionMode("banker")}
-                    variant={selectionMode === 'banker' ? 'primary' : 'outline'}
-                    className={`w-32 ${selectionMode === 'banker' ? 'bg-[#FFF100] text-[#0A4B7F]' : 'bg-transparent text-white border-white'}`}
-                  >
-                    Select Banker
-                  </Button>
-                  <div className="flex gap-1 mt-2">
-                    {bankerBalls.map(b => <Ball key={b} value={b} isSelected className="w-6 h-6 text-xs" />)}
-                  </div>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-white font-semibold mb-2">2. Select Against</span>
-                  <Button
-                    onClick={() => setSelectionMode("against")}
-                    variant={selectionMode === 'against' ? 'primary' : 'outline'}
-                    className={`w-32 ${selectionMode === 'against' ? 'bg-[#FFF100] text-[#0A4B7F]' : 'bg-transparent text-white border-white'}`}
-                  >
-                    Select Against
-                  </Button>
-                  <div className="flex gap-1 mt-2 flex-wrap justify-center max-w-xs">
-                    {againstBalls.map(b => <Ball key={b} value={b} isSelected className="w-6 h-6 text-xs bg-gray-300" />)}
-                  </div>
-                </div>
-              </div>
-            )} */}
-
             {/* existing: {selectedBalls.length > 0 && ( ... )} */}
 
             {/* ball grid */}
@@ -554,75 +522,75 @@ function RouteComponent() {
             </div>
 
             {/* CONDITIONAL DISPLAY OF SELECTED NUMBERS - MODIFIED */}
-            <div className="flex flex-col items-center w-full mt-6">
-              <span className="text-white mb-2">
-                {selectedBetType?.code.toUpperCase().includes("BANKER") ? "Banker Selection (1 Ball)" :
-                  selectedBetType?.code.toUpperCase().includes("AGAINST") ? "Main/Against Selection" :
-                    "Selected Numbers"}
-              </span>
+            {/*<div className="flex flex-col items-center w-full mt-6">*/}
+            {/*  <span className="text-white mb-2">*/}
+            {/*    {selectedBetType?.code.toUpperCase().includes("BANKER") ? "Banker Selection (1 Ball)" :*/}
+            {/*      selectedBetType?.code.toUpperCase().includes("AGAINST") ? "Main/Against Selection" :*/}
+            {/*        "Selected Numbers"}*/}
+            {/*  </span>*/}
 
-              {/* --- AGAINST MODE BUTTONS --- */}
-              {selectedBetType?.code.toUpperCase().includes("AGAINST") && (
-                <div className="flex gap-4 mb-4">
-                  <Button
-                    size="sm"
-                    onClick={() => setSelectionMode("normal")}
-                    className={selectionMode === "normal" ? "bg-green-600 text-white" : "bg-[#0A4B7F] text-white"}
-                  >
-                    Main Balls ({selectedBalls.length})
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={() => setSelectionMode("against")}
-                    className={selectionMode === "against" ? "bg-red-600 text-white" : "bg-[#0A4B7F] text-white"}
-                  >
-                    Against Balls ({againstBalls.length})
-                  </Button>
-                </div>
-              )}
-              {/* --- END AGAINST MODE BUTTONS --- */}
+            {/*  /!* --- AGAINST MODE BUTTONS --- *!/*/}
+            {/*  {selectedBetType?.code.toUpperCase().includes("AGAINST") && (*/}
+            {/*    <div className="flex gap-4 mb-4">*/}
+            {/*      <Button*/}
+            {/*        size="sm"*/}
+            {/*        onClick={() => setSelectionMode("normal")}*/}
+            {/*        className={selectionMode === "normal" ? "bg-green-600 text-white" : "bg-[#0A4B7F] text-white"}*/}
+            {/*      >*/}
+            {/*        Main Balls ({selectedBalls.length})*/}
+            {/*      </Button>*/}
+            {/*      <Button*/}
+            {/*        size="sm"*/}
+            {/*        onClick={() => setSelectionMode("against")}*/}
+            {/*        className={selectionMode === "against" ? "bg-red-600 text-white" : "bg-[#0A4B7F] text-white"}*/}
+            {/*      >*/}
+            {/*        Against Balls ({againstBalls.length})*/}
+            {/*      </Button>*/}
+            {/*    </div>*/}
+            {/*  )}*/}
+            {/*  /!* --- END AGAINST MODE BUTTONS --- *!/*/}
 
-              <div
-                className="bg-white rounded-2xl shadow w-full max-w-xs py-6 px-4 flex flex-wrap gap-2">
+            {/*  <div*/}
+            {/*    className="bg-white rounded-2xl shadow w-full max-w-xs py-6 px-4 flex flex-wrap gap-2">*/}
 
-                {/* Banker Selection Display */}
-                {selectedBetType?.code.toUpperCase().includes("BANKER") && bankerBalls.map((num) => (
-                  <Ball
-                    key={`banker-${num}`}
-                    value={num}
-                    isSelected
-                    className="bg-red-500 text-white" // Differentiate Banker
-                  />
-                ))}
+            {/*    /!* Banker Selection Display *!/*/}
+            {/*    {selectedBetType?.code.toUpperCase().includes("BANKER") && bankerBalls.map((num) => (*/}
+            {/*      <Ball*/}
+            {/*        key={`banker-${num}`}*/}
+            {/*        value={num}*/}
+            {/*        isSelected*/}
+            {/*        className="bg-red-500 text-white" // Differentiate Banker*/}
+            {/*      />*/}
+            {/*    ))}*/}
 
-                {/* AGAINST Selection Display (Based on current sub-mode) */}
-                {selectedBetType?.code.toUpperCase().includes("AGAINST") && (
-                  (selectionMode === "normal" ? selectedBalls : againstBalls).map((num) => (
-                    <Ball
-                      key={`against-${num}`}
-                      value={num}
-                      isSelected
-                      className={selectionMode === "normal" ? "bg-green-500 text-white" : "bg-red-500 text-white"}
-                    />
-                  ))
-                )}
+            {/*    /!* AGAINST Selection Display (Based on current sub-mode) *!/*/}
+            {/*    {selectedBetType?.code.toUpperCase().includes("AGAINST") && (*/}
+            {/*      (selectionMode === "normal" ? selectedBalls : againstBalls).map((num) => (*/}
+            {/*        <Ball*/}
+            {/*          key={`against-${num}`}*/}
+            {/*          value={num}*/}
+            {/*          isSelected*/}
+            {/*          className={selectionMode === "normal" ? "bg-green-500 text-white" : "bg-red-500 text-white"}*/}
+            {/*        />*/}
+            {/*      ))*/}
+            {/*    )}*/}
 
-                {/* Normal/Perm Selection Display */}
-                {selectionMode === "normal" && !selectedBetType?.code.toUpperCase().includes("AGAINST") && selectedBalls.map((num) => (
-                  <Ball
-                    key={`normal-${num}`}
-                    value={num}
-                    isSelected
-                    className="bg-[#FFF100] text-[#0A4B7F]"
-                  />
-                ))}
+            {/*    /!* Normal/Perm Selection Display *!/*/}
+            {/*    {selectionMode === "normal" && !selectedBetType?.code.toUpperCase().includes("AGAINST") && selectedBalls.map((num) => (*/}
+            {/*      <Ball*/}
+            {/*        key={`normal-${num}`}*/}
+            {/*        value={num}*/}
+            {/*        isSelected*/}
+            {/*        className="bg-[#FFF100] text-[#0A4B7F]"*/}
+            {/*      />*/}
+            {/*    ))}*/}
 
-                {/* Fallback if no numbers selected in any mode */}
-                {(selectedBalls.length === 0 && bankerBalls.length === 0 && againstBalls.length === 0) && (
-                  <p className="text-center text-gray-500 w-full">No numbers selected.</p>
-                )}
-              </div>
-            </div>
+            {/*    /!* Fallback if no numbers selected in any mode *!/*/}
+            {/*    {(selectedBalls.length === 0 && bankerBalls.length === 0 && againstBalls.length === 0) && (*/}
+            {/*      <p className="text-center text-gray-500 w-full">No numbers selected.</p>*/}
+            {/*    )}*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             {/* selected balls */}
             {/* {selectedBalls.length > 0 && (

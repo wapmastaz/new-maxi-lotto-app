@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import type { LatestDrawTicketResponse } from '@/types/api'
 import { NextButton, PrevButton, usePrevNextButtons } from './embla-carousel-arrow-button'
 import LatestDrawCard from './latest-draw-card'
+import React from "react";
 
 type PropType = {
   slides: LatestDrawTicketResponse[]
@@ -25,7 +26,7 @@ const LatestDrawTicket = (props: PropType) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((slide, index) => (
-            <div className="embla__slide" key={index}>
+            <div className="embla__slide"  style={{ "--slide-size": "50%" } as React.CSSProperties} key={index}>
               <LatestDrawCard item={slide} />
             </div>
           ))}

@@ -11,11 +11,11 @@ const Footer = () => {
           <div className="grid grid-cols-1 gap-10 sm:gap-6 sm:grid-cols-4">
             <div className="mb-6 md:mb-0">
               <Link to="/" className="flex items-center">
-                <Image src="/footer-logo.png" background='auto' width={238} height={36} className="h-8 me-3" alt="MaxiLotto Logo" />
+                {/*<Image src="/footer-logo.png" background='auto' width={238} height={36} className="h-8 me-3" alt=" Logo" />*/}
               </Link>
             </div>
             <div>
-              <h2 className="mb-4 text-lg font-semibold text-[#fff100] capitalize dark:text-white">About Maxilotto</h2>
+              <h2 className="mb-4 text-lg font-semibold text-[#fff100] capitalize dark:text-white">About </h2>
               <ul className="text-background text-sm font-medium space-y-4">
                 <li>
                   <Link to="/about" className="hover:underline">About Us</Link>

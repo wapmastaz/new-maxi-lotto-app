@@ -4,6 +4,9 @@ import { formatCurrency, fullDateFormat } from "@/lib/utils";
 import type { GameTicket } from "@/types/game";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "../ui/base-badge";
+import {Button} from "@/components/ui/button.tsx";
+import {Link} from "@tanstack/react-router";
+import {Eye} from "lucide-react";
 
 export const columns: ColumnDef<GameTicket>[] = [
 
@@ -131,6 +134,32 @@ export const columns: ColumnDef<GameTicket>[] = [
     meta: {
       skeleton: <Skeleton className="w-28 h-7" />
     }
-  }
+  },
+
+  {
+    accessorKey: 'action',
+    id: 'action',
+    cell: ({ row }) => {
+      return (
+        <div>
+          <Button variant="outline" asChild size="sm" className="text-muted-foreground items-center text-sm">
+            <Link to="/tickets/$ticketId"
+                  params={{ticketId: String(row.original.id)}}
+                  className="flex items-center gap-1">
+              <Eye /> view
+            </Link>
+          </Button>
+        </div>
+      );
+    },
+    size: 100,
+    enableSorting: true,
+    enableHiding: true,
+    enableResizing: true,
+    meta: {
+      skeleton: <Skeleton className="w-28 h-7" />
+    }
+  },
+
 ];
 

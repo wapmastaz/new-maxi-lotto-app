@@ -1,7 +1,5 @@
-import { Suspense, useState } from "react"
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { useState } from "react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
-import PageLoader from "@/components/page-loader"
 
 interface ProviderProps {
   children: React.ReactNode
@@ -14,10 +12,8 @@ const Provider = ({ children }: ProviderProps) => {
   return (
     <>
       <QueryClientProvider client={client}>
-        <Suspense fallback={<PageLoader />}>
           {children}
-        </Suspense>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/*<ReactQueryDevtools initialIsOpen={false} />*/}
       </QueryClientProvider>
     </>
   )
