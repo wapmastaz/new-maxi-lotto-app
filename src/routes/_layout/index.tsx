@@ -1,15 +1,22 @@
 import {createFileRoute, Link} from '@tanstack/react-router'
-import {useFetchDailyGames, useFetchLatestDraw} from '@/hooks/useGames'
+import {useFetchDailyGames, useFetchLatestDraw, useFetchTopWinner } from '@/hooks/useGames'
 import {Button} from '@/components/ui/button'
 import {Marquee} from '@/components/ui/marquee'
 import GameCard from '@/components/game-card'
 import GameCardSkeleton from '@/components/game-card-skeleton'
 import {Spinner} from '@/components/ui/spinner'
 import LatestDrawTicket from '@/components/latest-draw-ticket'
-import {cn} from '@/lib/utils'
+import {cn, formatCurrency} from '@/lib/utils'
 import TodayGameSlider from "@/components/today-games-slider.tsx";
 import type {EmblaOptionsType} from "embla-carousel";
 import {ChevronRight} from "lucide-react";
+import {Image} from "@unpic/react"
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item"
 
 export const Route = createFileRoute('/_layout/')({
   component: App,
@@ -49,6 +56,8 @@ function App() {
   const {data: games, isLoading} = useFetchDailyGames()
 
   const {data: latestDraws, isLoading: latestDrawsLoading} = useFetchLatestDraw()
+
+  const {data: latestWinner} = useFetchTopWinner()
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -151,11 +160,14 @@ function App() {
 
       </section>
 
-      <section className="bg-gradient-to-b py-8 sm:py-16 relative from-[#01B1A8] to-[#0185B6]">
+      <section className="bg-gradient-to-b overflow-hidden py-8 sm:py-16 relative from-[#01B1A8] to-[#0185B6]">
         <div className="container">
-          {/*<Image src="/games-bg.png" alt="Games Background" width={148} height={143} priority*/}
-          {/*       className="rounded relative left-1 top-2"/>*/}
-          <div className="space-y-6 max-w-xs mx-auto">
+          <div className="flex justify-center relative left-1 -top-24">
+            <Image src="/games-bg.png" alt="Games Background" width={310} height={211} priority
+                   className="rounded "/>
+          </div>
+
+          <div className="space-y-6 relative -mt-40 max-w-xs mx-auto">
             {whyCooseUs.map(({id, title, description}) => (
               <div className="h-60 rounded-[20px] p-12 bg-white space-y-4" key={id}>
                 <h3 className="text-xl text-bgColor font-bold">{title}</h3>
@@ -169,6 +181,41 @@ function App() {
 
           </div>
         </div>
+      </section>
+
+      <section className="py-8 sm:py:16">
+        <div className="container">
+          <div className="space-y-2 mb-6 flex justify-between">
+            <h2 className="text-lg mb-0 font-bold uppercase text-bgColor">Recent Winners</h2>
+            <Link to="/" className="text-xs text-slate-600 leading-relaxed capitalize">
+              See All
+            </Link>
+          </div>
+
+          <div className="flex w-full max-w-lg flex-col gap-6">
+            {latestWinner && latestWinner.map((winner, index: number) => (
+              <Item key={index} variant="default" className="p-0">
+
+                <div className="flex size-14 justify-center items-center rounded-full bg-[#FF005C]">
+                  <Image src="winner-trophy.png" alt="Winner Trophy" width={33} height={33} />
+                </div>
+
+                <ItemContent className="bg-gray-100 p-2 px-12 rounded-4xl">
+                  <ItemTitle className="font-normal text-sm">
+                    {winner.name}
+                  </ItemTitle>
+
+                  <ItemDescription className="font-semibold text-bgColor text-sm">
+                    {formatCurrency(winner.wonAmount)}
+                  </ItemDescription>
+                </ItemContent>
+
+              </Item>
+            ))}
+          </div>
+
+        </div>
+
       </section>
 
     </>

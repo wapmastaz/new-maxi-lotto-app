@@ -26,7 +26,7 @@ const TodayGameSlider = (props: PropType) => {
         <div className="embla__container flex">
           {slides.map((slide, index) => (
             <div className="embla__slide basis-1/2 px-2" key={index}>
-              <TodayGameCard game={slide} />
+              <TodayGameCard game={slide}   isEven={index % 2 === 1} />
             </div>
           ))}
         </div>
@@ -38,7 +38,7 @@ const TodayGameSlider = (props: PropType) => {
         onClick={onPrevButtonClick}
         disabled={prevBtnDisabled}
       >
-        <PrevButton className="text-primary-900" />
+        <PrevButton className="text-primary-900 border-0" />
       </button>
 
       <button
@@ -46,7 +46,7 @@ const TodayGameSlider = (props: PropType) => {
         onClick={onNextButtonClick}
         disabled={nextBtnDisabled}
       >
-        <NextButton className="text-primary-900" />
+        <NextButton className="text-primary-900 border-0" />
       </button>
     </section>
 

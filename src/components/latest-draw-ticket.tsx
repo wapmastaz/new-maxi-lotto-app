@@ -26,7 +26,7 @@ const LatestDrawTicket = (props: PropType) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((slide, index) => (
-            <div className="embla__slide"  style={{ "--slide-size": "50%" } as React.CSSProperties} key={index}>
+            <div className="embla__slide"  style={{ "--slide-size": "100%" } as React.CSSProperties} key={index}>
               <LatestDrawCard item={slide} />
             </div>
           ))}
