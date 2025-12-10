@@ -17,7 +17,7 @@ const LatestDrawCard = ({ game, isEven
     <div className={cn("relative grid grid-cols-1 overflow-hidden gap-4 rounded-[20px] p-6 shadow-2xl max-w-md mx-auto", isEven ? "bg-primary-900 " : "bg-[#FFE84A]")}>
 
       {/* Header section */}
-      <div className="flex flex-col gap-4 items-start justify-start">
+      <div className="flex flex-col gap-4 items-center justify-start">
         <div className="flex items-start space-x-2">
           <div className="flex flex-col gap-2">
             <div className="image-container flex justify-center">
@@ -29,7 +29,7 @@ const LatestDrawCard = ({ game, isEven
             </h3>
             <div className="flex flex-col">
               <div className="text-foreground text-sm text-center truncate">
-                Next Draw in: <span><Countdown targetDate={game.endDateTime} /></span>
+                Next Draw in: <span className="block"><Countdown targetDate={game.endDateTime} /></span>
               </div>
             </div>
             <div className="flex justify-center">

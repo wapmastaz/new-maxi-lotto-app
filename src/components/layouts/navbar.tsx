@@ -18,9 +18,6 @@ import { Image } from '@unpic/react';
 import { Lock, LogOut, User } from 'lucide-react'
 import { useEffect } from 'react'
 import MobileNav from './mobile-nav-drawer';
-// import MobileNav from './MobileDrawerNav'
-// import { useUserProfile } from '@/hooks/useUserProfile';
-// import { Spinner } from '../ui/spinner';
 
 const menu = [
   {
@@ -91,8 +88,8 @@ const Navbar = () => {
             <MobileNav menu={menu} />
           </div>
           <Link to="/app" className="flex items-center">
-            {/*<Image src="/logo.png" alt="MaxiLotto Logo"*/}
-            {/*  className="aspect-auto object-cover" width={99} height={25} />*/}
+            <Image src="/logo.png" alt="MaxiLotto Logo"
+              className="aspect-auto object-cover" width={99} height={25} />
           </Link>
         </div>
 
