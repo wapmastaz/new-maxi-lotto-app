@@ -5,7 +5,7 @@ import type { Game } from '@/types/game'
 import type { EmblaOptionsType } from 'embla-carousel'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { Image } from '@unpic/react';
 
@@ -55,7 +55,7 @@ const GameCarousel: React.FC<PropType> = (props) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {games.map((game) => (
-            <div className="embla__slide" key={game.gameID}>
+            <div className="embla__slide" style={{ "--slide-size": "100%" } as React.CSSProperties} key={game.gameID}>
               <div
                 className={cn("rounded-lg p-4 gap-4 flex items-center justify-between shadow min-w-20 h-20 bg-background")}>
                 <div className="flex gap-4">
@@ -73,7 +73,7 @@ const GameCarousel: React.FC<PropType> = (props) => {
                 {/* play button */}
                 <div className="flex">
                   <Button type="button" size="md" onClick={() => handleSelectedGame(game)} className="w-full bg-primary-900 px-4 h-9 text-background rounded-full hover:opacity-80" disabled={isGameClosed(game.endDateTime)}>
-                    Play Now
+                    {isGameClosed(game.endDateTime) ? 'Closed' : 'Play Now'}
                   </Button>
                 </div>
               </div>

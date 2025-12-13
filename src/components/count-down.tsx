@@ -29,7 +29,7 @@ export default function Countdown({ targetDate }: CountDownProps): JSX.Element {
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  if (!timeLeft) return <span>Time's up!</span>;
+  if (!timeLeft) return <span>Game Closed!</span>;
 
   return (
     <span>

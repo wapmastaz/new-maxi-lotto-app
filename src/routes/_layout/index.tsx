@@ -3,7 +3,6 @@ import {useFetchDailyGames, useFetchLatestDraw, useFetchTopWinner } from '@/hook
 import {Button} from '@/components/ui/button'
 import {Marquee} from '@/components/ui/marquee'
 import GameCard from '@/components/game-card'
-import GameCardSkeleton from '@/components/game-card-skeleton'
 import {Spinner} from '@/components/ui/spinner'
 import LatestDrawTicket from '@/components/latest-draw-ticket'
 import {cn, formatCurrency} from '@/lib/utils'
@@ -53,7 +52,7 @@ const whyCooseUs: whyCooseUsProps[] = [
 
 function App() {
 
-  const {data: games, isLoading} = useFetchDailyGames()
+  const {data: games} = useFetchDailyGames()
 
   const {data: latestDraws, isLoading: latestDrawsLoading} = useFetchLatestDraw()
 
@@ -95,24 +94,10 @@ function App() {
 
       {/*=== games section === */}
       <section className="pb-8 relative bg-primary-900">
-        <div className="relative flex w-full flex-col -top-2  items-center justify-center gap-1">
-          {isLoading && (
-            <Marquee pauseOnHover repeat={3} className=" [--duration:160s]">
-              {[...Array(5)].map((_, index) => (
-                <GameCardSkeleton key={index}/>
-              ))}
-            </Marquee>
-          )}
-
+        <div className="relative flex w-full flex-col -top-2 overflow-x-hidden  items-center justify-center gap-1">
           {games && (
             <>
-              <Marquee pauseOnHover repeat={3} className="[--duration:160s]">
-                {games.map((review) => (
-                  <GameCard key={review.gameID} name={review.gameName} image={review.gameImageUrl || undefined}/>
-                ))}
-              </Marquee>
-
-              <Marquee pauseOnHover reverse repeat={3} className="[--duration:160s]">
+              <Marquee pauseOnHover repeat={3} className="[--duration:60s] !overflow-hidden">
                 {games.map((review) => (
                   <GameCard key={review.gameID} name={review.gameName} image={review.gameImageUrl || undefined}/>
                 ))}

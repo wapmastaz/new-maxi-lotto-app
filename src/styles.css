@@ -445,3 +445,9 @@ html {
 .rdp-dropdowns {
 	@apply flex gap-1 text-slate-700 text-sm;
 }
+
+.active-ball {
+	background-image: url('../public/pick.png');
+	background-position: center;
+	background-size: cover;
+}

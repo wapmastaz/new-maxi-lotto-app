@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { cn, combination } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import type { BetList, BetType, Game } from '@/types/game'
 import { useEffect, useState } from 'react'
-
 import { toast } from 'sonner'
 
 interface BetSlipProps {
@@ -21,223 +20,176 @@ interface BetSlipProps {
   selectedGame: Game | null
   handleResetBetSlips: () => void
   selectionMode: "normal" | "banker" | "against"
+  isMainBall: boolean
 }
 
+// Factorial calculation
+const factorial = (r: number): number => {
+  if (r <= 1) return 1
+  return r * factorial(r - 1)
+}
 
-const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls, setBetsList, selectedGame, handleResetBetSlips, setBankerBalls, setAgainstBalls, bankerBalls }: BetSlipProps) => {
+// Combination calculation
+const combination = (n: number, r: number): number => {
+  if (n < r) return 0
+  return Math.round(factorial(n) / (factorial(n - r) * factorial(r)))
+}
+
+// @ts-ignore
+const BetSlip = ({
+                   selectedBalls,
+                   selectedBetType,
+                   againstBalls,
+                   setBetsList,
+                   selectedGame,
+                   handleResetBetSlips,
+                   setAgainstBalls,
+                 }: BetSlipProps) => {
 
   const [stake, setStake] = useState<number>(0)
   const [maxWinning, setMaxWinning] = useState<number>(0)
   const [numberOfLines, setNumberOfLines] = useState<number>(0)
 
+  // Calculate collision count (following Vue logic)
+  const collisionCount = () => {
+    if (selectedBalls.length === 0 || againstBalls.length === 0) return 0
+    return selectedBalls.filter((ball) => againstBalls.includes(ball)).length
+  }
+
+  // Calculate max winning (following Vue logic exactly)
+  const calculateMaxWinning = () => {
+    if (!selectedBetType) return 0
+    if (selectedBalls.length < selectedBetType.minimumNumberOfBalls) return 0
+
+    const code = selectedBetType.code
+    const nap = selectedBetType.nap
+
+    // BANKER logic
+    if (code === 'BANKER') {
+      if (selectedBalls.length > 1) {
+        return 5 * (stake || 5) * selectedBetType.winFactor
+      }
+      return 0
+    }
+
+    // AGAINST (AG) logic
+    if (nap === 'AG') {
+      // @ts-ignore
+      const maxBall = (selectedBalls.length + againstBalls.length) > 5
+        ? 5
+        : (selectedBalls.length + againstBalls.length)
+      const noOfLines = selectedBalls.length * againstBalls.length - collisionCount()
+      return noOfLines * stake * selectedBetType.winFactor
+    }
+
+    // AGAINST SINGLES (AGS) logic
+    if (nap === 'AGS') {
+      const noOfLines = selectedBalls.length * againstBalls.length - collisionCount()
+      return noOfLines * stake * selectedBetType.winFactor
+    }
+
+    // DIRECT/PERM logic
+    const maxBall = selectedBalls.length > 5 ? 5 : selectedBalls.length
+    const noOfLines = combination(maxBall, selectedBetType.minimumNumberOfBalls)
+    return noOfLines * stake * selectedBetType.winFactor
+  }
+
   const handleStakeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value)
     if (value > selectedBetType.maximumStake) {
       toast.error(`Maximum stake is ₦${selectedBetType.maximumStake}`)
-      setStake(selectedBetType.maximumStake);
+      setStake(selectedBetType.maximumStake)
       return
     }
     setStake(value)
+
+    console.log("calculate max-winning",calculateMaxWinning())
   }
 
-
+  // Calculate lines and max winning (following Vue logic)
   useEffect(() => {
-    if (!selectedBetType) return;
-
-    const betType = selectedBetType;
-    const amount = stake;
-    let result = 0;
-    let noOfLines = 0;
-
-    const code = betType.code.toUpperCase();
-    const r = betType.minimumNumberOfBalls;
-
-    // --- Core Logic ---
-
-    // 1. BANKER Logic
-    if (code.includes("BANKER")) {
-      // Banker bets typically combine the single banker ball with every opponent ball.
-      // Assuming your 'Against' balls (againstBalls array) are the opponents.
-      if (bankerBalls.length === 1) {
-        noOfLines = 89; // Fixed lines for 1 vs All
-        // Create an array of numbers from 1 to 90, excluding the Banker ball.
-      } else {
-        noOfLines = 0;
-      }
+    if (!selectedBetType) {
+      setNumberOfLines(0)
+      setMaxWinning(0)
+      return
     }
 
-    // 2. AGAINST Logic (e.g., AGAINST SINGLES)
-    else if (code.includes("AGAINST")) {
-      // AGAINST bets multiply the size of the two groups: Main (selectedBalls) x Against (againstBalls).
-      // The bet line is (1 ball from Main) combined with (1 ball from Against).
+    let lines = 0
+    const code = selectedBetType.code
+    const nap = selectedBetType.nap
 
-      if (selectedBalls.length >= r && againstBalls.length >= 1) { // Assuming minimum 1 against ball
-        noOfLines = selectedBalls.length * againstBalls.length;
-
-        // NOTE: collisionCount is included if the server requires client-side deduction 
-        // for overlapping numbers in the two groups, though usually, groups should be unique.
-        noOfLines = noOfLines - collisionCount;
-      } else {
-        noOfLines = 0; // Not enough balls selected
+    // BANKER: Always 89 lines when 1 ball selected
+    if (code === 'BANKER') {
+      lines = selectedBalls.length === 1 ? 89 : 0
+    }
+    // AGAINST SINGLES (AGS)
+    else if (nap === 'AGS') {
+      if (selectedBalls.length >= 1 && againstBalls.length >= 1) {
+        lines = selectedBalls.length * againstBalls.length - collisionCount()
       }
     }
-
-    // 3. DIRECT/PERM Logic (Standard lotto bets)
+    // DIRECT/PERM
     else {
-      const n = selectedBalls.length > 5 ? 5 : selectedBalls.length;
-
-      // If not enough balls, reset and return
-      if (n < r) {
-        setNumberOfLines(0);
-        setMaxWinning(0);
-        return;
-      }
-
-      if (code.includes("DIRECT") && n === r) {
-        // DIRECT: Fixed number of selections equal to r (e.g., DIRECT 3 with 3 balls) is always 1 line.
-        noOfLines = 1;
-      }
-      else if (code.includes("PERM")) {
-        // PERM: Select n balls to cover r lines. Uses COMBINATION (order doesn't matter).
-        // ❌ Fix: Replaced 'permutation(n, r)' with 'combination(n, r)'
-        noOfLines = combination(n, r);
+      if (selectedBalls.length >= selectedBetType.minimumNumberOfBalls) {
+        lines = combination(selectedBalls.length, selectedBetType.minimumNumberOfBalls)
       }
     }
 
-    // --- Final Calculation ---
-    result = noOfLines * amount * betType.winFactor;
-
-    setNumberOfLines(noOfLines);
-    setMaxWinning(result);
-
-    // Added bankerBalls to dependencies.
-  }, [selectedBalls, stake, selectedBetType, againstBalls, bankerBalls, collisionCount]);
-
-
-
-  // const handleAddToBets = () => {
-  //   if (!selectedGame) return toast.error("Please select a game first")
-  //   if (!selectedBetType) return toast.error("Select a bet type first")
-
-  //   const code = selectedBetType.code.toUpperCase()
-
-  //   // --- REVISED VALIDATION ---
-  //   if (code.includes("BANKER")) {
-  //     // Assuming Banker vs. Against Balls
-  //     if (bankerBalls.length !== 1)
-  //       return toast.error("Select exactly 1 Banker ball.")
-
-  //     // Assuming AGAINST balls are the opponents
-  //     // if (againstBalls.length < selectedBetType.minimumNumberOfBalls)
-  //     //   return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} opponent balls (Against).`)
-
-  //   } else if (code.includes("AGAINST")) {
-  //     // Assuming Against Singles (Main Group vs. Against Group)
-
-  //     // Main Group check
-  //     if (selectedBalls.length < selectedBetType.minimumNumberOfBalls)
-  //       return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} Main ball(s).`)
-
-  //     // Against Group check (we'll assume a minimum of 1 for the Against group)
-  //     if (againstBalls.length < 1)
-  //       return toast.error("Select at least 1 Against ball.")
-
-  //   } else {
-  //     // DIRECT/PERM logic
-  //     if (selectedBalls.length < selectedBetType.minimumNumberOfBalls)
-  //       return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} ball(s).`)
-  //   }
-
-  //   const newBet: BetList = {
-  //     betType: selectedBetType,
-  //     selectedBalls,
-  //     bankerBalls,
-  //     againstBalls,
-  //     stake,
-  //     maxWinning,
-  //     numberOfLines,
-  //   }
-
-  //   setBetsList(prev => [...prev, newBet])
-  //   resetBetSlip()
-  //   toast.success("Bet added successfully!")
-  // }
+    setNumberOfLines(lines)
+    setMaxWinning(calculateMaxWinning())
+  }, [selectedBalls, againstBalls, stake, selectedBetType])
 
   const handleAddToBets = () => {
-    if (!selectedGame) return toast.error("Please select a game first");
-    if (!selectedBetType) return toast.error("Select a bet type first");
+    if (!selectedGame) return toast.error("Please select a game first")
+    if (!selectedBetType) return toast.error("Select a bet type first")
 
-    const code = selectedBetType.code.toUpperCase();
+    const code = selectedBetType.code
+    const nap = selectedBetType.nap
 
     if (stake < selectedBetType.minimumStake || stake > selectedBetType.maximumStake)
-      return toast.error(`Stake must be between ₦${selectedBetType.minimumStake} and ₦${selectedBetType.maximumStake}`);
+      return toast.error(`Stake must be between ₦${selectedBetType.minimumStake} and ₦${selectedBetType.maximumStake}`)
 
-    // --- TEMPORARY ARRAY FOR BET CREATION ---
-    let finalAgainstBalls: number[] = againstBalls;
-
-    // --- REVISED VALIDATION & POPULATION ---
-    if (code.includes("BANKER")) {
-      // Banker Against All: Requires exactly 1 banker ball.
-      if (bankerBalls.length !== 1)
-        return toast.error("Select exactly 1 Banker ball.");
-
-      // ✅ POPULATE THE 89 OPPONENT BALLS
-      const banker = bankerBalls[0];
-
-      // Create an array of numbers from 1 to 90, excluding the Banker ball.
-      finalAgainstBalls = Array.from({ length: 90 }, (_, i) => i + 1).filter(
-        (num) => num !== banker
-      );
-
-    } else if (code.includes("AGAINST")) {
-      // Against Singles: Requires Main balls (selectedBalls) and Against balls (againstBalls).
+    // Validation (following Vue logic)
+    if (code === 'BANKER') {
+      if (selectedBalls.length !== 1)
+        return toast.error("Select exactly 1 Banker ball.")
+    } else if (nap === 'AGS') {
       if (selectedBalls.length < selectedBetType.minimumNumberOfBalls)
-        return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} Main ball(s).`);
-
+        return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} Main ball(s).`)
       if (againstBalls.length < 1)
-        return toast.error("Select at least 1 Against ball.");
-
+        return toast.error("Select at least 1 Against ball.")
     } else {
-      // DIRECT/PERM logic
       if (selectedBalls.length < selectedBetType.minimumNumberOfBalls)
-        return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} ball(s).`);
+        return toast.error(`Select at least ${selectedBetType.minimumNumberOfBalls} ball(s).`)
     }
-    // --- END REVISED VALIDATION & POPULATION ---
 
-    // The key here is passing 'finalAgainstBalls' which holds either the 
-    // user-selected against balls (for AGAINST bet) or the generated 89 balls (for BANKER bet).
+    // Calculate total stake (lines * stake per line)
+    const totalAmount = numberOfLines * stake
+
     const newBet: BetList = {
       betType: selectedBetType,
-      selectedBalls, // Empty for Banker, Main for Against
-      bankerBalls,   // The single Banker ball
-      againstBalls: finalAgainstBalls, // ⬅️ Populated with 89 balls for Banker!
-      stake,
+      selectedBalls: [...selectedBalls],
+      bankerBalls: code === 'BANKER' ? [...selectedBalls] : [],
+      againstBalls: nap === 'AGS' ? [...againstBalls] : [],
+      stake: totalAmount,
       maxWinning,
       numberOfLines,
-    };
+    }
 
-    setBetsList(prev => [...prev, newBet]);
-    resetBetSlip();
-    toast.success("Bet added successfully!");
-  };
-
-
+    setBetsList(prev => [...prev, newBet])
+    resetBetSlip()
+    toast.success("Bet added successfully!")
+  }
 
   const resetBetSlip = () => {
     setStake(0)
     setMaxWinning(0)
-    setBankerBalls([])
     setAgainstBalls([])
     handleResetBetSlips()
   }
 
-
-
-
   return (
-    <div
-      className={cn("bg-background rounded-2xl shadow-md w-full max-w-xs py-6 px-4 space-y-8")}
-    >
+    <div className={cn("bg-background rounded-2xl shadow-md w-full max-w-xs py-6 px-4 space-y-8")}>
       {/* Header */}
       <div className="flex justify-center">
         <h4 className="bg-[#0185B6] text-background font-bold px-8 py-3 rounded-full text-lg">
@@ -247,105 +199,60 @@ const BetSlip = ({ selectedBalls, selectedBetType, collisionCount, againstBalls,
 
       {/* Content */}
       <div className="text-base space-y-4 font-poppins">
-
         <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
           <span className="font-bold">Game:</span>
           <span className="text-foreground-muted">{selectedGame?.gameName || "N/A"}</span>
         </div>
+
         <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
           <span className="font-bold">Type:</span>
           <span className="text-foreground-muted">{selectedBetType?.code || "N/A"}</span>
         </div>
 
-        <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-          <span className="font-bold">Maximum Win:</span>
-          <span className="text-foreground-muted">
-            ₦{maxWinning}
-          </span>
-        </div>
-
-        {/* 🎯 BET NUMBERS DISPLAY */}
-        {/* REVISED BET NUMBERS DISPLAY FOR AGAINST BETS */}
-
+        {/* BET NUMBERS DISPLAY (Following Vue logic) */}
         {selectedBetType && (
           <>
-            {/* --- BANKER Logic Display --- */}
-            {selectedBetType.code.toUpperCase() === "BANKER" && (
-              <>
-                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-                  <span className="font-bold">Banker:</span>
-                  <span className="text-foreground-muted">
-                    {bankerBalls.length ? bankerBalls.join(", ") : "—"}
-                  </span>
-                </div>
-                {/* 🎯 REPLACED AGAINST BALLS DISPLAY */}
-                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-                  <span className="font-bold">Opponent Bets:</span>
-                  <span className="text-foreground-muted">
-                    {bankerBalls.length ? "89 Remaining Balls" : "—"}
-                  </span>
-                </div>
-                {/* ---------------------------------- */}
-              </>
-            )}
+            <div className="flex flex-row items-center gap-4 border-b border-dashed border-gray-300 pb-1">
+              <div className="flex justify-between mb-1">
+                <span className="font-bold text-sm">My Bets:</span>
+              </div>
+              <div className="text-xs text-foreground-muted break-words">
+                {selectedBalls.length > 0 ? (
+                  <>
+                    {selectedBalls.join('-')}
+                    {selectedBetType.code === 'BANKER' && (
+                      <span className="ml-2 font-bold">AG 1-90</span>
+                    )}
+                  </>
+                ) : '—'}
+              </div>
 
-            {/* --- AGAINST Singles Logic Display --- */}
-            {/* You should keep your AGAINST display separate and show selectedBalls/againstBalls */}
-            {selectedBetType.code.toUpperCase().includes("AGAINST") && (
-              <>
-                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-                  <span className="font-bold">Main Bets:</span>
-                  <span className="text-foreground-muted">
-                    {selectedBalls.length ? selectedBalls.join(", ") : "—"}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-                  <span className="font-bold">Against Bets:</span>
-                  <span className="text-foreground-muted">
-                    {againstBalls.length ? againstBalls.join(", ") : "—"}
-                  </span>
-                </div>
-              </>
-            )}
-
-            {/* --- DIRECT/PERM Logic Display --- */}
-            {!selectedBetType.code.toUpperCase().includes("BANKER") &&
-              !selectedBetType.code.toUpperCase().includes("AGAINST") && (
-                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-                  <span className="font-bold">My Bets:</span>
-                  <span className="text-foreground-muted">
-                    {selectedBalls.length ? selectedBalls.join(", ") : "—"}
-                  </span>
+              {/* Show Against Balls for AGS */}
+              {selectedBetType.nap === 'AGS' && againstBalls.length > 0 && (
+                <div className="text-xs text-foreground-muted mt-1">
+                  <span className="font-bold">AG </span>
+                  {againstBalls.join('-')}
                 </div>
               )}
+            </div>
+
+            <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+              <span className="font-bold">Max. Win per Balls:</span>
+              <span className="text-foreground-muted">₦{maxWinning.toLocaleString()}</span>
+            </div>
+
+            <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+              <span className="font-bold">Number of lines:</span>
+              <span className="text-foreground-muted">{numberOfLines}</span>
+            </div>
+
+            <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+              <span className="font-bold">Total Stake:</span>
+              <span className="text-foreground-muted">₦{(numberOfLines * stake).toLocaleString()}</span>
+            </div>
           </>
         )}
-
-        <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-          <span className="font-bold">Lines:</span>
-          <span className="text-foreground-muted">
-
-          </span>
-        </div>
-
-        <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
-          <span className="font-bold">Total Stake:</span>
-          <span className="text-foreground-muted">
-            ₦{stake}
-          </span>
-        </div>
       </div>
-      {/* 
-      <div className="text-xs text-slate-600 mt-4">
-
-      {/* <div className="text-xs text-slate-600 mt-4">
-        <p>Type: {selectedBetType?.code}</p>
-        <p>Selected: {JSON.stringify(selectedBalls)}</p>
-        <p>Banker: {JSON.stringify(bankerBalls)}</p>
-        <p>Against: {JSON.stringify(againstBalls)}</p>
-      </div> 
-      </div>
-*/}
 
       {/* Input Field for Stake */}
       <div className="space-y-1">

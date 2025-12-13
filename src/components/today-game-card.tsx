@@ -34,7 +34,7 @@ const LatestDrawCard = ({ game, isEven
             </div>
             <div className="flex justify-center">
               <Button type="button" size="md" className={cn("w-fit  px-4 h-9 text-background rounded-full hover:opacity-80", isEven ? "bg-[#FFE84A] text-bgColor " : "bg-primary-900 text-white")} disabled={isGameClosed(game.endDateTime)}>
-                Play Now
+                {isGameClosed(game.endDateTime) ? 'Game Closed' : 'Play Now'}
               </Button>
             </div>
           </div>

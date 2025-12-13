@@ -15,7 +15,7 @@ import z from "zod";
 import { toast } from "sonner";
 import { login } from '@/services/AuthService'
 
-const fallback = '/profile' as const
+const fallback = '/play' as const
 
 export const Route = createFileRoute('/auth/login')({
   component: RouteComponent,
@@ -65,6 +65,8 @@ function RouteComponent() {
       setLoading(false)
     }
   }
+
+
   return (
     <section className="bg-background flex relative flex-col items-center pt-8 space-y-5">
 
