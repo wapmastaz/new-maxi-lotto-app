@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 gap-10 sm:gap-6 sm:grid-cols-4">
             <div className="mb-0 md:mb-0">
               <Link to="/" className="flex items-center">
-                <Image src="/footer-logo.png" width={238} height={36} className="h-8 me-3" alt=" Logo" />
+                <Image src="/footer-logo.png" width={238} height={36} className="object-contain me-3" alt=" Logo" />
               </Link>
             </div>
             <div>

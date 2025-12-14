@@ -81,15 +81,14 @@ const Navbar = () => {
 
       <nav
         className="h-[70px] relative w-full px-6 md:px-16 lg:px-24 xl:px-32 flex items-center justify-between z-20 bg-white text-gray-700 shadow-[0px_4px_25px_0px_#0000000D] transition-all">
-
         <div className="flex items-center space-x-3">
           {/* Hamburger Icon (Mobile) */}
           <div className="md:hidden">
             <MobileNav menu={menu} />
           </div>
           <Link to="/app" className="flex items-center">
-            <Image src="/logo.png" alt="MaxiLotto Logo"
-              className="aspect-auto object-cover" width={99} height={25} />
+            <Image src="/maxilotto.png" alt="MaxiLotto Logo"
+              className="aspect-auto object-contain" width={125} height={25} />
           </Link>
         </div>
 
