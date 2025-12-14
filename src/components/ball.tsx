@@ -16,7 +16,7 @@ const Ball = ({ value, isSelected = false, onClick, className }: BallProps) => {
         "flex justify-center items-center h-12 w-12 rounded bg-white font-poppins font-bold transition-colors",
         "focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-400",
         isSelected
-          ? "active-ball text-white"
+          ? "active-ball text-[#0A4B7F]"
           : "text-[#0A4B7F] hover:bg-[#0A4B7F] hover:text-white",
         className
       )}

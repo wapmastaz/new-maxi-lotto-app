@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import {createFileRoute} from '@tanstack/react-router'
 import Ball from "@/components/ball"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import {Button} from "@/components/ui/button"
+import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form"
 import {
   Select,
   SelectContent,
@@ -9,30 +9,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useFetchDailyGames, useGetBetTypes } from "@/hooks/useGames"
-import { usePlaceBet } from "@/hooks/usePlaceBet"
+import {useFetchDailyGames, useGetBetTypes} from "@/hooks/useGames"
+import {usePlaceBet} from "@/hooks/usePlaceBet"
 import useAuthStore from "@/store/authStore"
-import type { BetList, BetType, Game } from "@/types/game"
-import { zodResolver } from "@hookform/resolvers/zod"
-import type { EmblaOptionsType } from 'embla-carousel'
-import { ShoppingBasketIcon, Trash2Icon } from "lucide-react"
-import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-import { Separator } from "@/components/ui/separator"
-import { useFetchFavouriteBalls } from "@/hooks/useUserProfile"
-import { Badge } from '@/components/ui/base-badge'
-import { BetCart } from '@/components/play/bet-cart'
+import type {BetList, BetType, Game} from "@/types/game"
+import {zodResolver} from "@hookform/resolvers/zod"
+import type {EmblaOptionsType} from 'embla-carousel'
+import {Trash2Icon} from "lucide-react"
+import {useEffect, useState} from "react"
+import {useForm} from "react-hook-form"
+import {toast} from "sonner"
+import {z} from "zod"
+import {Separator} from "@/components/ui/separator"
+import {useFetchFavouriteBalls} from "@/hooks/useUserProfile"
 import BetSlip from '@/components/play/bet-slip'
-import { FavouriteBallDialog } from '@/components/play/favourite-ball-dialog'
+import {FavouriteBallDialog} from '@/components/play/favourite-ball-dialog'
 import GameCarousel from '@/components/play/game-carousel'
 
 const FormSchema = z.object({
   betType: z.string().min(1, "Please select a bet type"),
 })
 
-const OPTIONS: EmblaOptionsType = { loop: true }
+const OPTIONS: EmblaOptionsType = {loop: true}
 
 export const Route = createFileRoute('/_layout/play')({
   component: RouteComponent,
@@ -47,10 +45,10 @@ function RouteComponent() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null)
   const [openDialog, setOpenDialog] = useState<boolean>(false)
 
-  const { data: betTypes } = useGetBetTypes()
-  const { minimalUser: user, syncUser } = useAuthStore(state => state)
-  const { data: games } = useFetchDailyGames()
-  const { data: favoriteBalls } = useFetchFavouriteBalls(user)
+  const {data: betTypes} = useGetBetTypes()
+  const {minimalUser: user, syncUser} = useAuthStore(state => state)
+  const {data: games} = useFetchDailyGames()
+  const {data: favoriteBalls} = useFetchFavouriteBalls(user)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -115,10 +113,21 @@ function RouteComponent() {
             selectedBetType.maximumNumberOfBalls > 1 ? 's' : ''
           } on selected bet type`
         )
+        // Scroll to bet slip when max reached
+        setTimeout(() => {
+          document.getElementById("betSlipSection")?.scrollIntoView({behavior: "smooth", block: "center"})
+        }, 300)
         return
       }
 
       setSelectedBalls([...selectedBalls, ball])
+
+      // Scroll to bet slip when reaching maximum
+      if (ballLength === selectedBetType.maximumNumberOfBalls) {
+        setTimeout(() => {
+          document.getElementById("betSlipSection")?.scrollIntoView({behavior: "smooth", block: "center"})
+        }, 300)
+      }
     } else {
       // Against ball selection
       if (againstBalls.includes(ball)) {
@@ -133,10 +142,21 @@ function RouteComponent() {
             selectedBetType.maximumNumberOfBalls > 1 ? 's' : ''
           } on selected bet type`
         )
+        // Scroll to bet slip when max reached
+        setTimeout(() => {
+          document.getElementById("betSlipSection")?.scrollIntoView({behavior: "smooth", block: "center"})
+        }, 300)
         return
       }
 
       setAgainstBalls([...againstBalls, ball])
+
+      // Scroll to bet slip when reaching maximum
+      if (ballLength === selectedBetType.maximumNumberOfBalls) {
+        setTimeout(() => {
+          document.getElementById("betSlipSection")?.scrollIntoView({behavior: "smooth", block: "center"})
+        }, 300)
+      }
     }
   }
 
@@ -158,13 +178,13 @@ function RouteComponent() {
 
     if (pattern === 'even') {
       // All even numbers from 2 to 90
-      availableNumbers = Array.from({ length: 45 }, (_, i) => (i + 1) * 2)
+      availableNumbers = Array.from({length: 45}, (_, i) => (i + 1) * 2)
     } else if (pattern === 'odd') {
       // All odd numbers from 1 to 89
-      availableNumbers = Array.from({ length: 45 }, (_, i) => i * 2 + 1)
+      availableNumbers = Array.from({length: 45}, (_, i) => i * 2 + 1)
     } else {
       // All numbers from 1 to 90
-      availableNumbers = Array.from({ length: 90 }, (_, i) => i + 1)
+      availableNumbers = Array.from({length: 90}, (_, i) => i + 1)
     }
 
     // Shuffle and pick random count
@@ -197,13 +217,13 @@ function RouteComponent() {
   // @ts-ignore
   const resetAllGames = () => {
     resetBetSlip()
-    form.reset({ betType: "" })
+    form.setValue("betType", "", { shouldValidate: false })
     setSelectedBetType(null)
     setBetsList([])
   }
 
   // Handle place bet
-  const { handlePlaceBet, loading } = usePlaceBet({
+  const {handlePlaceBet, loading} = usePlaceBet({
     user,
     betsList,
     selectedGame: selectedGame,
@@ -228,22 +248,20 @@ function RouteComponent() {
   const handleSelectedGame = (game: Game) => {
     if (game) {
       setSelectedGame(game)
-      form.reset({ betType: "" })
+      form.setValue("betType", "", { shouldValidate: false })
       setSelectedBetType(null)
       setSelectedBalls([])
       setAgainstBalls([])
       setBetsList([])
       const betTypeSelect = document.getElementById("betTypeSelect")
-      betTypeSelect?.scrollIntoView({ behavior: "smooth" })
+      betTypeSelect?.scrollIntoView({behavior: "smooth"})
     }
   }
 
   const handleResetBetSlips = () => {
-    form.reset({ betType: "" })
+    form.setValue("betType", "", { shouldValidate: false })
     setSelectedBalls([])
     setAgainstBalls([])
-    const betTypeSelect = document.getElementById("betTypeSelect")
-    betTypeSelect?.scrollIntoView({ behavior: "smooth" })
   }
 
   // Handle pattern selection (All/Even/Odd) with random count
@@ -268,11 +286,11 @@ function RouteComponent() {
     let numbers: number[] = []
 
     if (pattern === "all") {
-      numbers = Array.from({ length: 90 }, (_, i) => i + 1)
+      numbers = Array.from({length: 90}, (_, i) => i + 1)
     } else if (pattern === "even") {
-      numbers = Array.from({ length: 45 }, (_, i) => (i + 1) * 2)
+      numbers = Array.from({length: 45}, (_, i) => (i + 1) * 2)
     } else {
-      numbers = Array.from({ length: 45 }, (_, i) => i * 2 + 1)
+      numbers = Array.from({length: 45}, (_, i) => i * 2 + 1)
     }
 
     // Shuffle and pick random count
@@ -291,28 +309,30 @@ function RouteComponent() {
       <div className="container mx-auto px-4">
         {/* Game Carousel */}
         {games && (
-          <GameCarousel handleSelectedGame={handleSelectedGame} games={games} options={OPTIONS} />
+          <GameCarousel handleSelectedGame={handleSelectedGame} games={games} options={OPTIONS}/>
         )}
-        <Separator className="my-3" />
+        <Separator className="my-3"/>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(() => {})}>
+          <form onSubmit={form.handleSubmit(() => {
+          })}>
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-lg md:text-3xl font-bold text-white">Play</h1>
               <FormField
                 control={form.control}
                 name="betType"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem id="betTypeSelect">
                     <Select
                       onValueChange={field.onChange}
                       value={field.value}
                       disabled={!selectedGame}
                     >
-                      <FormControl className="border-2 border-[#0A4B7F] rounded-4xl px-10 text-[#0A4B7F] font-semibold bg-white">
+                      <FormControl
+                        className="border-2 border-[#0A4B7F] rounded-4xl px-10 text-[#0A4B7F] font-semibold bg-white">
                         <SelectTrigger>
-                          <SelectValue placeholder={selectedGame ? "Select bet type" : "Select game first"} />
+                          <SelectValue placeholder={selectedGame ? "Select bet type" : "Select game first"}/>
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -323,7 +343,7 @@ function RouteComponent() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage/>
                   </FormItem>
                 )}
               />
@@ -362,13 +382,16 @@ function RouteComponent() {
             {/* Actions */}
             <div className="flex justify-between flex-wrap gap-4 items-center mb-8">
               <div className="flex gap-1">
-                <Button onClick={() => handleSelectPattern("all")} size="sm" type="button" className="h-6 px-4 text-xs bg-[#0A4B7F] text-white">
+                <Button onClick={() => handleSelectPattern("all")} size="sm" type="button"
+                        className="h-6 px-4 text-xs bg-[#0A4B7F] text-white">
                   All
                 </Button>
-                <Button variant="outline" onClick={() => handleSelectPattern("even")} size="sm" type="button" className="h-6 px-4 text-xs bg-transparent border-[#FFF100] text-white">
+                <Button variant="outline" onClick={() => handleSelectPattern("even")} size="sm" type="button"
+                        className="h-6 px-4 text-xs bg-transparent border-[#FFF100] text-white">
                   Even
                 </Button>
-                <Button variant="outline" onClick={() => handleSelectPattern("odd")} size="sm" type="button" className="h-6 px-4 text-xs bg-transparent border-border text-white">
+                <Button variant="outline" onClick={() => handleSelectPattern("odd")} size="sm" type="button"
+                        className="h-6 px-4 text-xs bg-transparent border-border text-white">
                   Odd
                 </Button>
 
@@ -398,15 +421,17 @@ function RouteComponent() {
                   onClick={clearSelection}
                   className="h-7 w-7 bg-[#FFF100] text-[#0A4B7F] rounded-full"
                 >
-                  <Trash2Icon size={14} />
+                  <Trash2Icon size={14}/>
                 </Button>
               </div>
             </div>
 
+
             {/* Ball Grid */}
             <div className="flex bg-[#1FEFBC] rounded-[20px] shadow-lg p-6">
               <div className="flex flex-wrap gap-4 justify-center rounded-2xl p-2">
-                {Array.from({ length: 90 }, (_, i) => i + 1).map((num) => {
+
+                {Array.from({length: 90}, (_, i) => i + 1).map((num) => {
                   const isSelected = isMainBall
                     ? selectedBalls.includes(num)
                     : againstBalls.includes(num)
@@ -431,7 +456,7 @@ function RouteComponent() {
             </div>
 
             {/* Bet Slip */}
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center mt-6" id="betSlipSection">
               <BetSlip
                 selectedBetType={selectedBetType!}
                 setSelectedBetType={setSelectedBetType}
@@ -446,13 +471,14 @@ function RouteComponent() {
                 selectedGame={selectedGame}
                 handleResetBetSlips={handleResetBetSlips}
                 setAgainstBalls={setAgainstBalls}
-                setBankerBalls={() => {}}
+                setBankerBalls={() => {
+                }}
                 isMainBall={isMainBall}
               />
             </div>
           </form>
         </Form>
-      </div>
+
 
       {favoriteBalls && (
         <FavouriteBallDialog
@@ -466,34 +492,130 @@ function RouteComponent() {
         />
       )}
 
-      {/* Floating Cart Button */}
-      <BetCart
-        betLists={betsList}
-        onRemoveItem={handleRemoveItem}
-        onClearCart={handleClearCart}
-        handlePlaceBet={handlePlaceBet}
-        loading={loading}
-        selectedGame={selectedGame}
-      >
-        <div className="fixed bottom-30 right-2 z-50 animate-in fade-in slide-in-from-bottom-5">
-          <Button
-            variant="primary"
-            size="icon"
-            type="button"
-            className="relative bg-accent-1-900 right-2 rounded-full shadow-lg hover:bg-[#0185B6] hover:text-white transition-all"
-          >
-            <ShoppingBasketIcon fontSize={20} className="text-primary-900" />
-            <Badge
-              variant="destructive"
-              shape="circle"
-              size="sm"
-              className="absolute top-0 start-full -translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2"
-            >
-              {betsList.length}
-            </Badge>
-          </Button>
+      {/* Bets List Section - Show added games on the page */}
+      {betsList.length > 0 && (
+        <div className="mt-8 bg-background rounded-2xl shadow-md w-full max-w-sm" id="gamesListSection">
+          <div className=" p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-[#0A4B7F]">
+                My Games ({betsList.length})
+              </h2>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleClearCart}
+                className="text-red-500 border-red-500 hover:bg-red-50"
+              >
+                Clear All
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              {betsList.map((bet, index) => (
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="bg-[#0185B6] text-white px-3 py-1 rounded-full text-sm font-bold">
+                          {bet.betType.code}
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {selectedGame?.gameName}
+                        </span>
+                      </div>
+
+                      {/* Display balls based on bet type */}
+                      <div className="space-y-2 text-sm">
+                        {bet.betType.code === 'BANKER' ? (
+                          <div>
+                            <span className="font-semibold text-gray-700">Balls: </span>
+                            <span className="text-gray-600">
+                              {bet.selectedBalls.join(', ')}
+                              <span className="font-bold text-[#0A4B7F] ml-2">AG 1-90</span>
+                            </span>
+                          </div>
+                        ) : bet.betType.nap === 'AGS' ? (
+                          <>
+                            <div>
+                              <span className="font-semibold text-gray-700">Main Bets: </span>
+                              <span className="text-gray-600">
+                                {bet.selectedBalls.join(', ')}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-gray-700">Against Bets: </span>
+                              <span className="text-gray-600">
+                                {bet.againstBalls.join(', ')}
+                              </span>
+                            </div>
+                          </>
+                        ) : (
+                          <div>
+                            <span className="font-semibold text-gray-700">My Bets: </span>
+                            <span className="text-gray-600">
+                              {bet.selectedBalls.join(', ')}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="flex gap-6 mt-3">
+                          <div>
+                            <span className="font-semibold text-gray-700">Lines: </span>
+                            <span className="text-gray-600">{bet.numberOfLines}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold text-gray-700">Stake: </span>
+                            <span className="text-gray-600">₦{bet.stake.toLocaleString()}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold text-gray-700">Max Win: </span>
+                            <span className="text-green-600 font-bold">
+                              ₦{bet.maxWinning.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemoveItem(index)}
+                      className="text-red-500 hover:bg-red-50 ml-4"
+                    >
+                      <Trash2Icon size={18}/>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Total and Place Bet Button */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-lg font-bold text-gray-700">Total Stake:</span>
+                <span className="text-2xl font-bold text-[#0A4B7F]">
+                  ₦{betsList.reduce((sum, bet) => sum + bet.stake, 0).toLocaleString()}
+                </span>
+              </div>
+              <Button
+                type="button"
+                onClick={handlePlaceBet}
+                disabled={loading}
+                className="w-full bg-[#0185B6] text-white rounded-full py-6 text-lg font-bold hover:opacity-90"
+              >
+                {loading ? 'Placing Bet...' : 'Place Bet'}
+              </Button>
+            </div>
+          </div>
         </div>
-      </BetCart>
+      )}
+      </div>
     </section>
   )
 }

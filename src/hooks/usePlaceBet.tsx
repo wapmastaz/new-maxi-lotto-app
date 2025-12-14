@@ -101,7 +101,7 @@ export const usePlaceBet = ({
       // ... (Error handling and state management remain the same) ...
       if (response) {
         await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-        toast.success("Game placed successfully!")
+        toast.success("Bet placed successfully!")
         resetAllGames()
         await syncUser()
       }

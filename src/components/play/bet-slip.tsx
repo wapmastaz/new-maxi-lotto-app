@@ -35,7 +35,6 @@ const combination = (n: number, r: number): number => {
   return Math.round(factorial(n) / (factorial(n - r) * factorial(r)))
 }
 
-// @ts-ignore
 const BetSlip = ({
                    selectedBalls,
                    selectedBetType,
@@ -102,8 +101,6 @@ const BetSlip = ({
       return
     }
     setStake(value)
-
-    console.log("calculate max-winning",calculateMaxWinning())
   }
 
   // Calculate lines and max winning (following Vue logic)
@@ -179,6 +176,11 @@ const BetSlip = ({
     setBetsList(prev => [...prev, newBet])
     resetBetSlip()
     toast.success("Bet added successfully!")
+
+    // Scroll to games list after adding
+    setTimeout(() => {
+      document.getElementById("gamesListSection")?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, 300)
   }
 
   const resetBetSlip = () => {
@@ -189,7 +191,7 @@ const BetSlip = ({
   }
 
   return (
-    <div className={cn("bg-background rounded-2xl shadow-md w-full max-w-xs py-6 px-4 space-y-8")}>
+    <div className={cn("bg-background rounded-2xl shadow-md w-full max-w-sm py-6 px-4 space-y-8")}>
       {/* Header */}
       <div className="flex justify-center">
         <h4 className="bg-[#0185B6] text-background font-bold px-8 py-3 rounded-full text-lg">
@@ -212,7 +214,7 @@ const BetSlip = ({
         {/* BET NUMBERS DISPLAY (Following Vue logic) */}
         {selectedBetType && (
           <>
-            <div className="flex flex-row items-center gap-4 border-b border-dashed border-gray-300 pb-1">
+            <div className="flex flex-col border-b border-dashed border-gray-300 pb-1">
               <div className="flex justify-between mb-1">
                 <span className="font-bold text-sm">My Bets:</span>
               </div>
