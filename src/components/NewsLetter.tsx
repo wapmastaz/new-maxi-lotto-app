@@ -57,7 +57,7 @@ export default function NewsLetter() {
             </FormItem>
           )}
         />
-        <Button className="font-bold font-poppins text-lg w-full bg-[#FF005C] h-12 rounded-[42px]">
+        <Button className="font-bold font-poppins text-lg shadow-none border-none w-full bg-[#FF005C] h-12 rounded-[42px]">
           Subscribe
         </Button>
       </form>

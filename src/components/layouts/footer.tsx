@@ -35,7 +35,7 @@ const Footer = () => {
             <Image src={"/gamify.png"} width={92} height={32} className="h-auto object-contain" alt="Gamify" />
             <Image src={"/responsible-bet.png"} width={50} height={50} className="h-auto object-contain" alt="Responsible Bet" />
           </div>
-          <span className="text-sm flex justify-center text-muted-foreground text-center dark:text-gray-400">© {new Date().getFullYear()} <Link to="/" className="hover:underline"> MaxiLotto</Link>. All Rights Reserved.
+          <span className="text-sm flex justify-center text-muted-foreground text-center dark:text-gray-400">© {new Date().getFullYear()} <Link to="/" className="hover:underline ml-1"> MaxiLotto</Link>. All Rights Reserved.
           </span>
         </div>
       </div>
