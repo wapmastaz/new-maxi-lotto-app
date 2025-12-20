@@ -447,7 +447,7 @@ html {
 }
 
 .active-ball {
-	background-image: url('../public/pick.png');
+	background-image: url('./pick.png');
 	background-position: center;
 	background-size: cover;
 }

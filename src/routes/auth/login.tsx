@@ -74,7 +74,7 @@ function RouteComponent() {
       <h1 className="text-base font-extrabold">Sign In</h1>
 
       <div className="logo flex w-full py-5 left-0">
-        <Image src="/auth/login.png" className="" alt="logo" width={342} height={92} />
+        <Image src="/auth/login.png" priority className="" alt="logo" width={342} height={92} />
       </div>
 
       {/* Form */}

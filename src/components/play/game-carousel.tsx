@@ -75,7 +75,6 @@ const GameCarousel: React.FC<PropType> = (props) => {
 
     return null
   }
-
   return (
     <div className="embla">
       <div className="embla__viewport" ref={emblaRef}>
