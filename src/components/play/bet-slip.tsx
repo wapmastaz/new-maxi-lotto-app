@@ -11,16 +11,16 @@ interface BetSlipProps {
   againstBalls: number[]
   selectedBetType: BetType
   collisionCount: number
-  setBetsList: React.Dispatch<React.SetStateAction<BetList[]>>
   betLists: BetList[]
   setSelectedBalls: React.Dispatch<React.SetStateAction<number[]>>
   setBankerBalls: React.Dispatch<React.SetStateAction<number[]>>
   setAgainstBalls: React.Dispatch<React.SetStateAction<number[]>>
   setSelectedBetType: React.Dispatch<React.SetStateAction<BetType | null>>
   selectedGame: Game | null
-  handleResetBetSlips: () => void
+  handleResetBetSlips?: () => void // Make optional since we're not using it in reset
   selectionMode: "normal" | "banker" | "against"
-  isMainBall: boolean
+  isMainBall: boolean,
+  addBet: (betList: BetList) => void,
 }
 
 // Factorial calculation
@@ -39,10 +39,10 @@ const BetSlip = ({
                    selectedBalls,
                    selectedBetType,
                    againstBalls,
-                   setBetsList,
+                   addBet,
                    selectedGame,
-                   handleResetBetSlips,
                    setAgainstBalls,
+                   setSelectedBalls
                  }: BetSlipProps) => {
 
   const [stake, setStake] = useState<number>(0)
@@ -169,11 +169,12 @@ const BetSlip = ({
       bankerBalls: code === 'BANKER' ? [...selectedBalls] : [],
       againstBalls: nap === 'AGS' ? [...againstBalls] : [],
       stake: totalAmount,
+      amount: stake,
       maxWinning,
       numberOfLines,
     }
 
-    setBetsList(prev => [...prev, newBet])
+    addBet(newBet)
     resetBetSlip()
     toast.success("Bet added successfully!")
 
@@ -187,12 +188,14 @@ const BetSlip = ({
     setStake(0)
     setMaxWinning(0)
     setAgainstBalls([])
-    handleResetBetSlips()
+    setSelectedBalls([])
+    // Don't call handleResetBetSlips here to avoid scrolling to top
   }
 
   return (
     <div className={cn("bg-background rounded-2xl shadow-md w-full max-w-sm py-6 px-4 space-y-8")}>
-      {/* Header */}
+
+    {/* Header */}
       <div className="flex justify-center">
         <h4 className="bg-[#0185B6] text-background font-bold px-8 py-3 rounded-full text-lg">
           Bet Slip

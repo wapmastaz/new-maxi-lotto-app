@@ -5,27 +5,41 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
 import type { User } from "@/types/user"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { updateFavouriteBall } from "@/services/UserService"
 import { useQueryClient } from "@tanstack/react-query"
-import { cn } from "@/lib/utils"
+import Ball from "@/components/ball.tsx"
 
 interface FavouriteBallDialogProps {
   open: boolean
   setOpen: (open: boolean) => void
   currentUser: User
-  favouriteBalls: number[]
+  favouriteBalls?: number[]
 }
 
 export function FavouriteBallDialog({ open, setOpen, favouriteBalls, currentUser }: FavouriteBallDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedBalls, setSelectedBalls] = useState<number[]>(favouriteBalls || [])
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
+
+  // Sync selectedBalls with favouriteBalls prop when it changes
+  useEffect(() => {
+    if (favouriteBalls) {
+      setSelectedBalls(favouriteBalls)
+    }
+  }, [favouriteBalls])
+
+  // Reset selectedBalls when dialog opens
+  useEffect(() => {
+    if (open && favouriteBalls) {
+      setSelectedBalls(favouriteBalls)
+    }
+  }, [open, favouriteBalls])
 
   // toggle selection of a ball
   const handleSelectBall = (ball: number) => {
@@ -42,8 +56,6 @@ export function FavouriteBallDialog({ open, setOpen, favouriteBalls, currentUser
       }
       setIsLoading(true)
       await updateFavouriteBall(currentUser.customerId, selectedBalls)
-      // 🔹 Replace this with your API call
-      // console.log("Selected Favourite Balls:", selectedBalls)
       await queryClient.invalidateQueries({queryKey: ['favourite_balls']})
 
       toast.success("Favourite balls updated successfully!")
@@ -58,30 +70,29 @@ export function FavouriteBallDialog({ open, setOpen, favouriteBalls, currentUser
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:mx-auto max-w-[95%] sm:max-w-xl mx-auto bg-background p-4 rounded">
-        <DialogHeader className="text-left">
+        <DialogHeader className="text-left space-y-2">
           <DialogTitle className="font-semibold">Update Favourite Balls</DialogTitle>
+          <span className="text-primary-900 font-medium text-xs">
+            {selectedBalls.length} {selectedBalls.length > 1 ? 'balls' : 'ball'} selected
+          </span>
         </DialogHeader>
 
         <div className="grid gap-4 py-4 text-sm">
           {/* Ball grid */}
-          <ScrollArea className="h-[45vh] w-full ">
+          <ScrollArea className="h-[45vh] w-full">
             <div className="flex flex-wrap gap-4 rounded-2xl p-2">
               {Array.from({ length: 90 }, (_, index) => index + 1).map((ball) => (
-                <button
+                <Ball
                   key={ball}
+                  value={ball}
+                  isSelected={selectedBalls.includes(ball)}
                   onClick={() => handleSelectBall(ball)}
-                  className={cn(
-                    "w-10 h-10 flex items-center justify-center rounded-full border text-sm font-medium transition",
-                    selectedBalls.includes(ball)
-                      ? "bg-primary-900 text-white border-primary-900"
-                      : "bg-background text-primary-900 border-border hover:bg-gray-100"
-                  )}
-                >
-                  {ball}
-                </button>
+                  className="border rounded-full border-primary-900"
+                />
               ))}
             </div>
           </ScrollArea>
+
           {/* Submit button */}
           <Button
             variant="primary"
@@ -93,8 +104,6 @@ export function FavouriteBallDialog({ open, setOpen, favouriteBalls, currentUser
             {isLoading ? "Processing..." : "Update Favourite Balls"}
           </Button>
         </div>
-
-
       </DialogContent>
     </Dialog>
   )

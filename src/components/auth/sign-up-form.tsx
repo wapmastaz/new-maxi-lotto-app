@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage, } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Loader2 } from "lucide-react";
+import {EyeIcon, EyeOffIcon} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { signupSchema } from "@/lib/validators";
@@ -13,19 +13,20 @@ import useAuthStore from '@/store/authStore';
 import { toast } from 'sonner';
 import {Link, useNavigate} from '@tanstack/react-router';
 import { useState } from "react";
+import {Spinner} from "@/components/ui/spinner.tsx";
 
 
 const SignUpForm = () => {
 
   const { setAccessToken, setUser } = useAuthStore((state) => state);
-
   const navigate = useNavigate();
 
-  const [showPassword] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false);
 
-  // const toggleShowPassword = () => setShowPassword(!showPassword);
+  const toggleShowPassword = () => setShowPassword(!showPassword)
+  const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword)
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -34,7 +35,7 @@ const SignUpForm = () => {
       phoneNumber: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
   });
 
@@ -122,16 +123,16 @@ const SignUpForm = () => {
                     placeholder="Password"
                     {...field}
                   />
-                  {/* <div
-                  onClick={toggleShowPassword}
-                  className="absolute right-2 cursor-pointer text-primary"
-                >
-                  {showPassword ? (
-                    <EyeOffIcon size={20} color="#CACACA" />
-                  ) : (
-                    <EyeIcon size={20} color="#CACACA" />
-                  )}
-                </div> */}
+                  <div
+                    onClick={toggleShowPassword}
+                    className="absolute right-2 cursor-pointer text-primary"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon size={20} color="#CACACA" />
+                    ) : (
+                      <EyeIcon size={20} color="#CACACA" />
+                    )}
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />
@@ -147,20 +148,20 @@ const SignUpForm = () => {
               <FormControl>
                 <div className="relative flex items-center">
                   <Input
-                    type={showPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm password"
                     {...field}
                   />
-                  {/* <div
-                  onClick={toggleShowPassword}
-                  className="absolute right-2 cursor-pointer text-primary"
-                >
-                  {showPassword ? (
-                    <EyeOffIcon size={20} color="#CACACA" />
-                  ) : (
-                    <EyeIcon size={20} color="#CACACA" />
-                  )}
-                </div> */}
+                  <div
+                    onClick={toggleShowConfirmPassword}
+                    className="absolute right-2 cursor-pointer text-primary"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOffIcon size={20} color="#CACACA" />
+                    ) : (
+                      <EyeIcon size={20} color="#CACACA" />
+                    )}
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />
@@ -173,11 +174,12 @@ const SignUpForm = () => {
           control={form.control}
           name="terms"
           render={({ field }) => (
-            <FormItem className="flex items-start space-x-0 space-y-0 rounded-md ">
+            <FormItem className="flex items-center space-x-1 space-y-0 rounded-md ">
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                  className="size-5"
                 />
               </FormControl>
               <div className="space-y-0 text-foreground/70 leading-normal">
@@ -191,12 +193,33 @@ const SignUpForm = () => {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="ageConsent"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-1 space-y-0 rounded-md ">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="size-5"
+                />
+              </FormControl>
+              <div className="space-y-0 text-foreground/70 leading-normal">
+                I confirm that I am at least 18 years old.
+              </div>
+
+            </FormItem>
+
+          )}
+        />
+
         <Button
           type="submit"
           disabled={loading}
           className="w-full bg-accent-2-900 text-white rounded-2xl font-medium font-poppins uppercase hover:opacity-70 hover:bg-primary"
         >
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {loading && <Spinner/>}
           {loading ? 'Submitting' : "Sign Up"}
         </Button>
 

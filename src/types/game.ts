@@ -35,6 +35,7 @@ export type BetList = {
 	numberOfLines: number;
 	againstBalls: number[];
 	bankerBalls: number[];
+	amount: number;
 };
 
 export interface GameTicket {

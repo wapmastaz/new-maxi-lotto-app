@@ -19,12 +19,14 @@ const FormSchema = z.object({
 });
 
 export default function NewsLetter() {
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: { email: '' },
   });
 
   const onSubmit = () => {
+
     toast.custom((t) => (
       <Alert variant="mono" icon="primary" onClose={() => toast.dismiss(t)}>
         <AlertIcon>
@@ -33,6 +35,8 @@ export default function NewsLetter() {
         <AlertTitle>Your form has been successfully submitted</AlertTitle>
       </Alert>
     ));
+
+    form.reset();
   };
 
   // const handleReset = () => {

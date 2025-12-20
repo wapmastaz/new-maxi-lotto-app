@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Image } from '@unpic/react'
-import { EyeIcon, EyeOffIcon, LoaderCircleIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 import { Form, FormControl, FormField, FormItem, FormMessage, } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { toast } from "sonner";
 import { login } from '@/services/AuthService'
+import {Spinner} from "@/components/ui/spinner.tsx";
 
 const fallback = '/play' as const
 
@@ -131,7 +132,7 @@ function RouteComponent() {
 
             <Button type="submit" disabled={loading}
               className="w-full mb-4 bg-accent-2-900 text-white text-sm rounded-2xl uppercase hover:opacity-70 hover:bg-primary">
-              {loading ? <LoaderCircleIcon className="animate-spin size-4" /> : null}
+              {loading && <Spinner/>}
               {loading ? 'Signing In...' : 'Sign In'}
             </Button>
 

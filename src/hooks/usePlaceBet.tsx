@@ -90,7 +90,7 @@ export const usePlaceBet = ({
           bet1: bet1,
           bet2: bet2,
           betTypeId: value.betType.betTypeID,
-          stakeperline: value.stake,
+          stakeperline: value.amount,
           lines: numOfLines,
         }
       })
@@ -107,7 +107,6 @@ export const usePlaceBet = ({
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error(error)
       toast.error(error.message || "An error occurred while placing your bet")
     } finally {
       setLoading(false)

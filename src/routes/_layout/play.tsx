@@ -12,7 +12,8 @@ import {
 import {useFetchDailyGames, useGetBetTypes} from "@/hooks/useGames"
 import {usePlaceBet} from "@/hooks/usePlaceBet"
 import useAuthStore from "@/store/authStore"
-import type {BetList, BetType, Game} from "@/types/game"
+import {useBetStore} from "@/store/bet-store.ts"
+import type {BetType, Game} from "@/types/game"
 import {zodResolver} from "@hookform/resolvers/zod"
 import type {EmblaOptionsType} from 'embla-carousel'
 import {Trash2Icon} from "lucide-react"
@@ -40,13 +41,13 @@ function RouteComponent() {
   const [selectedBalls, setSelectedBalls] = useState<number[]>([])
   const [againstBalls, setAgainstBalls] = useState<number[]>([])
   const [isMainBall, setIsMainBall] = useState<boolean>(true)
-  const [betsList, setBetsList] = useState<BetList[]>([])
   const [selectedBetType, setSelectedBetType] = useState<BetType | null>(null)
-  const [selectedGame, setSelectedGame] = useState<Game | null>(null)
   const [openDialog, setOpenDialog] = useState<boolean>(false)
 
-  const {data: betTypes} = useGetBetTypes()
+  const {betsList, selectedGame, addBet, removeBet, clearBets, setSelectedGame} = useBetStore()
   const {minimalUser: user, syncUser} = useAuthStore(state => state)
+
+  const {data: betTypes} = useGetBetTypes()
   const {data: games} = useFetchDailyGames()
   const {data: favoriteBalls} = useFetchFavouriteBalls(user)
 
@@ -217,9 +218,9 @@ function RouteComponent() {
   // @ts-ignore
   const resetAllGames = () => {
     resetBetSlip()
-    form.setValue("betType", "", { shouldValidate: false })
+    form.setValue("betType", "", {shouldValidate: false})
     setSelectedBetType(null)
-    setBetsList([])
+    clearBets()
   }
 
   // Handle place bet
@@ -228,40 +229,40 @@ function RouteComponent() {
     betsList,
     selectedGame: selectedGame,
     resetAllGames: () => {
-      setBetsList([])
+      clearBets()
     },
     syncUser
   })
 
   const handleRemoveItem = (index: number) => {
-    const updatedBets = [...betsList]
-    updatedBets.splice(index, 1)
-    setBetsList(updatedBets)
+    removeBet(index)
     toast.success("Bet removed successfully!")
   }
 
   const handleClearCart = () => {
-    setBetsList([])
+    clearBets()
     toast.success("Cart cleared successfully!")
   }
 
   const handleSelectedGame = (game: Game) => {
     if (game) {
       setSelectedGame(game)
-      form.setValue("betType", "", { shouldValidate: false })
+      form.setValue("betType", "", {shouldValidate: false})
       setSelectedBetType(null)
       setSelectedBalls([])
       setAgainstBalls([])
-      setBetsList([])
+      clearBets()
       const betTypeSelect = document.getElementById("betTypeSelect")
       betTypeSelect?.scrollIntoView({behavior: "smooth"})
     }
   }
 
   const handleResetBetSlips = () => {
-    form.setValue("betType", "", { shouldValidate: false })
+    form.setValue("betType", "", {shouldValidate: false})
     setSelectedBalls([])
     setAgainstBalls([])
+    const betTypeSelect = document.getElementById("betTypeSelect")
+    betTypeSelect?.scrollIntoView({behavior: "smooth"})
   }
 
   // Handle pattern selection (All/Even/Odd) with random count
@@ -354,7 +355,10 @@ function RouteComponent() {
               <div className="flex gap-4 mb-6 justify-center">
                 <Button
                   type="button"
-                  onClick={() => setIsMainBall(true)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMainBall(true)
+                  }}
                   size="sm"
                   className={`h-9 px-6 text-sm font-bold rounded-4xl ${
                     isMainBall
@@ -366,7 +370,10 @@ function RouteComponent() {
                 </Button>
                 <Button
                   type="button"
-                  onClick={activateAgainstBall}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    activateAgainstBall()
+                  }}
                   size="sm"
                   className={`h-9 px-6 text-sm font-bold rounded-4xl ${
                     !isMainBall
@@ -402,7 +409,7 @@ function RouteComponent() {
                     className="h-6 px-4 text-xs bg-[#0A4B7F] text-white"
                     onClick={() => setOpenDialog(true)}
                   >
-                    My special numbers
+                    My Favorite numbers
                   </Button>
                 )}
               </div>
@@ -426,10 +433,12 @@ function RouteComponent() {
               </div>
             </div>
 
-
             {/* Ball Grid */}
-            <div className="flex bg-[#1FEFBC] rounded-[20px] shadow-lg p-6">
-              <div className="flex flex-wrap gap-4 justify-center rounded-2xl p-2">
+            <span className="text-white font-semibold flex mb-1 justify-center text-xs">
+            {selectedBalls.length} {selectedBalls.length > 1 ? 'balls' : 'ball'} selected
+          </span>
+            <div className="flex bg-[#1FEFBC] rounded-[20px] shadow-lg p-4">
+              <div className="flex flex-wrap gap-4 justify-center rounded-2xl">
 
                 {Array.from({length: 90}, (_, i) => i + 1).map((num) => {
                   const isSelected = isMainBall
@@ -448,6 +457,7 @@ function RouteComponent() {
                             : 'bg-red-400 text-white')
                           : ''
                       }
+
                       onClick={() => selectBall(num)}
                     />
                   )
@@ -465,7 +475,7 @@ function RouteComponent() {
                 againstBalls={againstBalls}
                 selectionMode={isMainBall ? "normal" : "against"}
                 collisionCount={0}
-                setBetsList={setBetsList}
+                addBet={addBet}
                 setSelectedBalls={setSelectedBalls}
                 betLists={betsList}
                 selectedGame={selectedGame}
@@ -480,141 +490,141 @@ function RouteComponent() {
         </Form>
 
 
-      {favoriteBalls && (
-        <FavouriteBallDialog
-          open={openDialog}
-          setOpen={setOpenDialog}
-          favoriteBalls={favoriteBalls}
-          selectBall={selectBall}
-          bankerBalls={selectedBetType?.code === 'BANKER' ? selectedBalls : []}
-          againstBalls={againstBalls}
-          normalBalls={selectedBalls}
-        />
-      )}
+        {favoriteBalls && (
+          <FavouriteBallDialog
+            open={openDialog}
+            setOpen={setOpenDialog}
+            favoriteBalls={favoriteBalls}
+            selectBall={selectBall}
+            bankerBalls={selectedBetType?.code === 'BANKER' ? selectedBalls : []}
+            againstBalls={againstBalls}
+            normalBalls={selectedBalls}
+          />
+        )}
 
-      {/* Bets List Section - Show added games on the page */}
-      {betsList.length > 0 && (
-        <div className="mt-8 bg-background rounded-2xl shadow-md w-full max-w-sm" id="gamesListSection">
-          <div className=" p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-[#0A4B7F]">
-                My Games ({betsList.length})
-              </h2>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleClearCart}
-                className="text-red-500 border-red-500 hover:bg-red-50"
-              >
-                Clear All
-              </Button>
-            </div>
-
-            <div className="space-y-4">
-              {betsList.map((bet, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow"
+        {/* Bets List Section - Show added games on the page */}
+        {betsList.length > 0 && (
+          <div className="mt-8 bg-background rounded-2xl shadow-md w-full max-w-sm" id="gamesListSection">
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-[#0A4B7F]">
+                  My Games ({betsList.length})
+                </h2>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleClearCart}
+                  className="text-red-500 border-red-500 hover:bg-red-50"
                 >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="bg-[#0185B6] text-white px-3 py-1 rounded-full text-sm font-bold">
-                          {bet.betType.code}
-                        </div>
-                        <span className="text-sm text-gray-500">
+                  Clear All
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {betsList.map((bet, index) => (
+                  <div
+                    key={index}
+                    className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="bg-[#0185B6] text-white px-3 py-1 rounded-full text-sm font-bold">
+                            {bet.betType.code}
+                          </div>
+                          <span className="text-sm text-gray-500">
                           {selectedGame?.gameName}
                         </span>
-                      </div>
+                        </div>
 
-                      {/* Display balls based on bet type */}
-                      <div className="space-y-2 text-sm">
-                        {bet.betType.code === 'BANKER' ? (
-                          <div>
-                            <span className="font-semibold text-gray-700">Balls: </span>
-                            <span className="text-gray-600">
-                              {bet.selectedBalls.join(', ')}
-                              <span className="font-bold text-[#0A4B7F] ml-2">AG 1-90</span>
-                            </span>
-                          </div>
-                        ) : bet.betType.nap === 'AGS' ? (
-                          <>
+                        {/* Display balls based on bet type */}
+                        <div className="space-y-2 text-sm">
+                          {bet.betType.code === 'BANKER' ? (
                             <div>
-                              <span className="font-semibold text-gray-700">Main Bets: </span>
+                              <span className="font-semibold text-gray-700">Balls: </span>
                               <span className="text-gray-600">
+                              {bet.selectedBalls.join(', ')}
+                                <span className="font-bold text-[#0A4B7F] ml-2">AG 1-90</span>
+                            </span>
+                            </div>
+                          ) : bet.betType.nap === 'AGS' ? (
+                            <>
+                              <div>
+                                <span className="font-semibold text-gray-700">Main Bets: </span>
+                                <span className="text-gray-600">
                                 {bet.selectedBalls.join(', ')}
                               </span>
-                            </div>
-                            <div>
-                              <span className="font-semibold text-gray-700">Against Bets: </span>
-                              <span className="text-gray-600">
+                              </div>
+                              <div>
+                                <span className="font-semibold text-gray-700">Against Bets: </span>
+                                <span className="text-gray-600">
                                 {bet.againstBalls.join(', ')}
                               </span>
-                            </div>
-                          </>
-                        ) : (
-                          <div>
-                            <span className="font-semibold text-gray-700">My Bets: </span>
-                            <span className="text-gray-600">
+                              </div>
+                            </>
+                          ) : (
+                            <div>
+                              <span className="font-semibold text-gray-700">My Bets: </span>
+                              <span className="text-gray-600">
                               {bet.selectedBalls.join(', ')}
                             </span>
-                          </div>
-                        )}
+                            </div>
+                          )}
 
-                        <div className="flex gap-6 mt-3">
-                          <div>
-                            <span className="font-semibold text-gray-700">Lines: </span>
-                            <span className="text-gray-600">{bet.numberOfLines}</span>
-                          </div>
-                          <div>
-                            <span className="font-semibold text-gray-700">Stake: </span>
-                            <span className="text-gray-600">₦{bet.stake.toLocaleString()}</span>
-                          </div>
-                          <div>
-                            <span className="font-semibold text-gray-700">Max Win: </span>
-                            <span className="text-green-600 font-bold">
+                          <div className="flex gap-6 mt-3">
+                            <div>
+                              <span className="font-semibold text-gray-700">Lines: </span>
+                              <span className="text-gray-600">{bet.numberOfLines}</span>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-gray-700">Stake: </span>
+                              <span className="text-gray-600">₦{bet.stake.toLocaleString()}</span>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-gray-700">Max Win: </span>
+                              <span className="text-green-600 font-bold">
                               ₦{bet.maxWinning.toLocaleString()}
                             </span>
+                            </div>
                           </div>
                         </div>
                       </div>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveItem(index)}
+                        className="text-red-500 hover:bg-red-50 ml-4"
+                      >
+                        <Trash2Icon size={18}/>
+                      </Button>
                     </div>
-
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleRemoveItem(index)}
-                      className="text-red-500 hover:bg-red-50 ml-4"
-                    >
-                      <Trash2Icon size={18}/>
-                    </Button>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Total and Place Bet Button */}
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-bold text-gray-700">Total Stake:</span>
-                <span className="text-2xl font-bold text-[#0A4B7F]">
+              {/* Total and Place Bet Button */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-lg font-bold text-gray-700">Total Stake:</span>
+                  <span className="text-2xl font-bold text-[#0A4B7F]">
                   ₦{betsList.reduce((sum, bet) => sum + bet.stake, 0).toLocaleString()}
                 </span>
+                </div>
+                <Button
+                  type="button"
+                  onClick={handlePlaceBet}
+                  disabled={loading}
+                  className="w-full bg-[#0185B6] text-white rounded-full py-6 text-lg font-bold hover:opacity-90"
+                >
+                  {loading ? 'Placing Bet...' : 'Place Bet'}
+                </Button>
               </div>
-              <Button
-                type="button"
-                onClick={handlePlaceBet}
-                disabled={loading}
-                className="w-full bg-[#0185B6] text-white rounded-full py-6 text-lg font-bold hover:opacity-90"
-              >
-                {loading ? 'Placing Bet...' : 'Place Bet'}
-              </Button>
             </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </section>
   )

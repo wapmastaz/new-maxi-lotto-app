@@ -5,6 +5,7 @@ import {
   HousePlusIcon,
   UserCircle,
   LogIn,
+  PlayIcon
 } from "lucide-react";
 import { useInstantAuth } from "@/hooks/useInstantAuth";
 import { Link, useLocation } from "@tanstack/react-router";
@@ -20,6 +21,7 @@ const MobileBottomNav = () => {
   const bottomNavLinks = [
     { label: "Home", route: "/", icon: HousePlusIcon },
     { label: "Results", route: "/results", icon: ChartBar },
+    { label: "Play", route: "/play", icon: PlayIcon },
     { label: "Deposit", route: "/deposit", icon: CreditCard },
     authenticated
       ? { label: "Profile", route: "/profile", icon: UserCircle }

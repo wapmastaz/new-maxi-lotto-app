@@ -13,6 +13,9 @@ export const signupSchema = z
 		terms: z.boolean().refine((val) => val, {
 			message: 'You must accept the terms and conditions',
 		}),
+		ageConsent: z.boolean().refine((val) => val, {
+			message: 'You must be above 18 years',
+		}),
 		password: z.string().min(6, 'Password must be at least 6 characters long'),
 		confirmPassword: z
 			.string()
