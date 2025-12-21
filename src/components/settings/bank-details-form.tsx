@@ -47,12 +47,16 @@ export function BankDetailForm({ user, banks }: { user: User, banks: Bank[] }) {
     try {
       setLoading(true)
 
-      const response = await updateBankDetails(user.customerId, values.accountName, values.accountNumber, Number(values.bank))
-      console.log("bank details updated successfully:", response);
-      toast.success("bank details updated successfully")
-      form.reset()
+      const {accountNumber, bank, accountName} = await updateBankDetails(user.customerId, values.accountName, values.accountNumber, Number(values.bank))
+      toast.success("Bank details updated successfully")
+
+        form.reset({
+          accountNumber: accountNumber ?? "",
+          bank: bank ?? 0,
+          accountName: accountName ?? "",
+        })
+
     } catch (error: any) {
-      console.error("Error updating bank details:", error);
       toast.error(error.message || "Failed to update bank details")
     } finally {
       setLoading(false)
@@ -128,7 +132,7 @@ export function BankDetailForm({ user, banks }: { user: User, banks: Bank[] }) {
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="Enter account number"
+                    placeholder=""
                     value={field.value ?? ""}
                     onChange={(e) => handleAccountNumberChange(e.target.value)}
                   />

@@ -27,8 +27,6 @@ const profileSchema = z.object({
   address: z.string().optional(),
   mobile: z.string().min(6, "Mobile is too short"),
   country: z.string().optional(),
-  skype: z.string().optional(),
-  bbmPin: z.string().optional(),
   dateOfBirth: z.date().optional(),
 })
 
@@ -46,8 +44,6 @@ export function ProfileSettingsForm({ user }: { user: User }) {
       address: user.address ?? "",
       mobile: user.mobile ?? "",
       country: user.country ?? "",
-      skype: user.skype ?? "",
-      bbmPin: user.bbmPin ?? "",
       dateOfBirth: user.dateOfBirth ?? undefined,
     },
   })
@@ -57,13 +53,20 @@ export function ProfileSettingsForm({ user }: { user: User }) {
     try {
       setLoading(true)
 
-      const response = await updateUser(values as User)
-      console.log("Password updated successfully:", response);
-      toast.success("Password updated successfully")
-      form.reset()
+      const {firstname, lastname, middlename, address, mobile, country, dateOfBirth} = await updateUser(values as User)
+      toast.success("Profile updated successfully")
+        form.reset({
+          firstname: firstname ?? "",
+          lastname: lastname ?? "",
+          middlename: middlename ?? "",
+          address: address ?? "",
+          mobile: mobile ?? "",
+          country: country ?? "",
+          dateOfBirth: dateOfBirth ?? undefined,
+        })
+
     } catch (error: any) {
-      console.error("Error updating password:", error);
-      toast.error(error.message || "Failed to update password")
+      toast.error(error.message || "Failed to update profile")
     } finally {
       setLoading(false)
     }
@@ -198,34 +201,6 @@ export function ProfileSettingsForm({ user }: { user: User }) {
                   <Input placeholder="" {...field} />
                 </FormControl>
                 <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="skype"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Skype</FormLabel>
-                <FormControl>
-                  <Input placeholder="" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="bbmPin"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>BBM Pin</FormLabel>
-                <FormControl>
-                  <Input placeholder="" {...field} />
-                </FormControl>
               </FormItem>
             )}
           />

@@ -9,6 +9,7 @@ import { Link } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import type { EmblaOptionsType } from 'embla-carousel'
+import DataLoader from "@/components/data-loader.tsx";
 
 const OPTIONS: EmblaOptionsType = { slidesToScroll: 2 }
 
@@ -17,10 +18,8 @@ export const Route = createFileRoute('/_authenticated/wallet')({
 })
 
 function RouteComponent() {
-
-  const { data: user } = useUserProfile()
-
-  const { data: creditCards, isLoading } = useGetCreditCards()
+  const { data: user, isFetching: isUserFetching } = useUserProfile()
+  const { data: creditCards, isLoading: isCardsLoading } = useGetCreditCards()
 
   return (
     <>
@@ -28,9 +27,12 @@ function RouteComponent() {
         <div className="container mx-auto px-4">
           {/* Balance */}
           <div className="mb-6 flex flex-col items-center gap-1">
-            <UserBalance walletBalance={user?.walletBalance || 0} />
+            {isUserFetching ? (
+              <DataLoader/>
+            ) : (
+              <UserBalance walletBalance={user?.walletBalance || 0} />
+            )}
           </div>
-
         </div>
       </section>
 
@@ -45,35 +47,39 @@ function RouteComponent() {
           </div>
 
           {/* cards */}
-          {isLoading && (
-            <Spinner />
-          )}
-
-          {creditCards && creditCards.length === 0 && (
+          {isCardsLoading ? (
+            <div className="flex justify-center py-8">
+              <Spinner />
+            </div>
+          ) : !creditCards || creditCards.length === 0 ? (
             <EmptyCreditCard />
-          )}
-
-          {creditCards && (
+          ) : (
             <BankCard debitCards={creditCards} options={OPTIONS} />
           )}
 
           {/* deposit and withdraw buttons */}
           <div className="mt-6 flex justify-center gap-4">
-            <Button size={"lg"} className="w-32 bg-[#FF005C] rounded-3xl text-white hover:bg-[#FF005C]/90" asChild>
+            <Button
+              size={"lg"}
+              className="w-32 bg-[#FF005C] rounded-3xl text-white hover:bg-[#FF005C]/90"
+              asChild
+            >
               <Link to="/deposit">
                 Deposit
               </Link>
             </Button>
-            <Button size={"lg"} className="w-32 bg-[#0185B6] rounded-3xl text-white hover:bg-[#0185B6]/90" asChild>
+            <Button
+              size={"lg"}
+              className="w-32 bg-[#0185B6] rounded-3xl text-white hover:bg-[#0185B6]/90"
+              asChild
+            >
               <Link to="/withdrawal">
                 Withdraw
               </Link>
             </Button>
           </div>
         </div>
-
       </section>
-
     </>
   )
 }

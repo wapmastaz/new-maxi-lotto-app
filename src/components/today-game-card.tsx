@@ -3,6 +3,8 @@ import {Button} from "@/components/ui/button.tsx";
 import Countdown from "@/components/count-down.tsx";
 import {Image} from "@unpic/react";
 import {cn, finalImagePath, isGameClosed} from "@/lib/utils.ts";
+import {useBetStore} from "@/store/bet-store.ts";
+import {useNavigate} from "@tanstack/react-router";
 
 interface TodayGameCardProps {
   game: Game
@@ -12,6 +14,15 @@ interface TodayGameCardProps {
 
 const LatestDrawCard = ({ game, isEven
                         }: TodayGameCardProps) => {
+  const {setSelectedGame} = useBetStore()
+  const navigate = useNavigate()
+
+  const playGame = async (game: Game) => {
+    if (game) {
+      setSelectedGame(game)
+      await navigate({to: "/play"})
+    }
+  }
 
   return (
     <div className={cn("relative grid grid-cols-1 overflow-hidden gap-4 rounded-[20px] p-6 shadow-2xl max-w-md mx-auto", isEven ? "bg-primary-900 " : "bg-[#FFE84A]")}>
@@ -33,7 +44,7 @@ const LatestDrawCard = ({ game, isEven
               </div>
             </div>
             <div className="flex justify-center">
-              <Button type="button" size="md" className={cn("w-fit  px-4 h-9 text-background rounded-full hover:opacity-80", isEven ? "bg-[#FFE84A] text-bgColor " : "bg-primary-900 text-white")} disabled={isGameClosed(game.endDateTime)}>
+              <Button onClick={() => playGame(game)} type="button" size="md" className={cn("w-fit  px-4 h-9 text-background rounded-full hover:opacity-80", isEven ? "bg-[#FFE84A] text-bgColor " : "bg-primary-900 text-white")} disabled={isGameClosed(game.endDateTime)}>
                 {isGameClosed(game.endDateTime) ? 'Game Closed' : 'Play Now'}
               </Button>
             </div>

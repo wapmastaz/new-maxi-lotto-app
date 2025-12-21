@@ -3,6 +3,7 @@ import { useUserProfile } from '@/hooks/useUserProfile'
 import { maskEmail } from '@/lib/utils'
 import {createFileRoute, redirect} from '@tanstack/react-router'
 import {toast} from "sonner";
+import DataLoader from "@/components/data-loader.tsx";
 
 export const Route = createFileRoute('/_authenticated/settings/verify-email')({
   beforeLoad: ({context}) => {
@@ -16,7 +17,7 @@ export const Route = createFileRoute('/_authenticated/settings/verify-email')({
 
 function RouteComponent() {
 
-  const { data: user } = useUserProfile()
+  const { data: user, isFetching } = useUserProfile()
 
   return (
     <>
@@ -32,8 +33,12 @@ function RouteComponent() {
             <p className="text-muted-foreground text-center">
               Enter the verification code sent to ({user && maskEmail(user.email)})
             </p>
+            {isFetching || !user ? (
+              <DataLoader />
+            ) : (
+              <EmailVerificationForm />
+            )}
 
-            <EmailVerificationForm />
           </div>
         </div>
 
