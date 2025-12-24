@@ -111,10 +111,10 @@ export const columns: ColumnDef<GameResultType>[] = [
     ),
     cell: ({ row }) => {
       const status = row.original.isValidated
-        ? { text: "Validated", variant: "success" }
-        : { text: "Pending", variant: "secondary" };
+        ? { text: "Validated", variant: "success" as const}
+        : { text: "Pending", variant: "warning" as const};
       return (
-        <Badge variant={"success"} appearance="outline">
+        <Badge variant={status.variant} appearance="outline">
           {status.text}
         </Badge>
       );

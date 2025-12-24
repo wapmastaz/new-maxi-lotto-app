@@ -11,7 +11,6 @@ import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/p
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-
 import {
   getCoreRowModel,
   getFilteredRowModel,
