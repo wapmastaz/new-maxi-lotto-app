@@ -442,6 +442,30 @@ html {
 	display: none;
 }
 
+.app-loader {
+	height: 100vh;
+	background: #0f172a;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.spinner {
+	width: 48px;
+	height: 48px;
+	border: 4px solid rgba(255, 255, 255, 0.15);
+	border-top-color: #38bdf8;
+	border-radius: 50%;
+	animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+
 .rdp-dropdowns {
 	@apply flex gap-1 text-slate-700 text-sm;
 }
